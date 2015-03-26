@@ -25,8 +25,8 @@ public class Main implements GLEventListener, KeyListener {
 		gl = drawable.getGL();
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
-		System.out.println("Espa�o de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		System.out.println("Espaço de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
+		gl.glClearColor(0.75f, 0.75f, 0.75f, 0.75f);
 	}
 	
 	public void SRU() {
@@ -61,13 +61,7 @@ public class Main implements GLEventListener, KeyListener {
 		 SRU();
 		 
 		 // seu desenho ...
-		 gl.glColor3f(0.0f, 0.0f, 0.0f);
-		 gl.glLineWidth(3.0f);
-		 gl.glBegin(GL.GL_LINES);
-		 	gl.glVertex2d(0.0, 0.0);
-		    gl.glVertex2d(200.0, 200.0);
-		 gl.glEnd();
-		 
+		 gl.glColor3f(0.0f, 0.0f, 1.0f);		 		 
 		 gl.glPointSize(2.0f);
 		 gl.glBegin(GL.GL_POINTS);
 		 	for (int i = 0; i < 72; i++) {
