@@ -26,7 +26,7 @@ public class Main implements GLEventListener, KeyListener {
 		glu = new GLU();
 		glDrawable.setGL(new DebugGL(gl));
 		System.out.println("Espaço de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
-		gl.glClearColor(0.75f, 0.75f, 0.75f, 0.75f);
+		gl.glClearColor(1f, 1f, 1f, 0f);
 	}
 	
 	public void SRU() {
