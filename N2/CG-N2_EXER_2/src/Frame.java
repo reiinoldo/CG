@@ -22,7 +22,7 @@ public class Frame extends JFrame{
 	
 	public Frame() {		
 		// Cria o frame.
-		super("CG-N2_Respostas-Exer1");   
+		super("CG-N2_Respostas-Exer2");   
 		setBounds(300,250,janelaLargura,janelaAltura+22);  // 500 + 22 da borda do t’tulo da janela
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
