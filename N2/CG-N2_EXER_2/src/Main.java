@@ -84,20 +84,24 @@ public class Main implements GLEventListener, KeyListener {
 			updateOrtho(-50f, 50f, -50f, 50f);
 			break;
 		case 'e':
+			updateOrtho(50f, 50f, 0f, 0f);
 			break;
 		case 'd':
+			updateOrtho(-50f, -50f, 0f, 0f);
 			break;
 		case 'c':
+			updateOrtho(0f, 0f, -50f, -50f);
 			break;
 		case 'b':
+			updateOrtho(0f, 0f, 50f, 50f);
 			break;
 		}
 		
-		System.out.println(this.ortho2D_maxX);
-		System.out.println(this.ortho2D_maxY);
+		System.out.println("Max X: " + this.ortho2D_maxX);
+		System.out.println("Max Y: " + this.ortho2D_maxY);
 		
-		System.out.println(this.ortho2D_minX);
-		System.out.println(this.ortho2D_minY);		
+		System.out.println("Min X: " + this.ortho2D_minX);
+		System.out.println("Min Y: " + this.ortho2D_minY);		
 		glDrawable.display();
 	}
 
@@ -125,32 +129,33 @@ public class Main implements GLEventListener, KeyListener {
 		return (raio * Math.sin(Math.PI * angulo / 180.0));
 	}
 	
-	private void updateOrtho(float minX, float maxX, float minY, float maxY){
+	private void updateOrtho(float minX, float maxX, float minY, float maxY){		
+		if(this.ortho2D_minX + minX > -100)
+			return;		
+		if(this.ortho2D_minY + minY > -100)
+			return;
+		
+		if(this.ortho2D_minX + minX < -700)
+			return;
+		if(this.ortho2D_minY + minY < -700)
+			return;
+		
+		if(this.ortho2D_maxX + maxX < 100)
+			return;
+		if(this.ortho2D_maxY + maxY < 100)
+			return;
+		
+		if(this.ortho2D_maxX + maxX > 700)
+			return;
+		if(this.ortho2D_maxY + maxY > 700)
+			return;		
+		
 		this.ortho2D_minX += minX;
 		this.ortho2D_maxX += maxX;
 		
 		this.ortho2D_minY += minY;
 		this.ortho2D_maxY += maxY;
 		
-		if(this.ortho2D_minX > -100)
-			this.ortho2D_minX = -100f;
-		if(this.ortho2D_minY > -100)
-			this.ortho2D_minY = -100f;
-		
-		if(this.ortho2D_minX < -500)
-			this.ortho2D_minX = -500f;
-		if(this.ortho2D_minY < -500)
-			this.ortho2D_minY = -500f;
-		
-		if(this.ortho2D_maxX < 100)
-			this.ortho2D_maxX = 100f;
-		if(this.ortho2D_maxY < 100)
-			this.ortho2D_maxY = 100f;
-		
-		if(this.ortho2D_maxX > 500)
-			this.ortho2D_maxX = 500f;
-		if(this.ortho2D_maxY > 500)
-			this.ortho2D_maxY = 500f;		
 	}
 	
 }
