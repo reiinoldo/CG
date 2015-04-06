@@ -1,4 +1,3 @@
-/// \file Exemplo_N2_Jogl_Eclipse.java
 /// \brief Exemplo_N2_Jogl_Eclipse: desenha uma linha na diagonal.
 /// \version $Revision: 1.0 $
 /// \author Dalton Reis.
@@ -23,23 +22,20 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
 	
-	private double valorX = 200.0, valorY = 200.0;
 	private int antigoX, antigoY = 0;
+	
+	// posição de qual vertice será movimentado
+	private int opcao = 0;
 	
 	// posição nos vetores
 	static final int X = 0;
 	static final int Y = 1;
 	
-	// ponto de controle
-	static final int T = 3;
-	
 	// qtd de pontos da spline
-	static final int QTD_PONTOS = 3;
+	private int qtdPontos = 10;
 	
 	// salva os 4 pontos
-	private float[][] pontos = new float[4][2];
-	
-	
+	private float[][] pontos = new float[4][2];	
 
 	public void init(GLAutoDrawable drawable) {
 		System.out.println(" --- init ---");
@@ -49,6 +45,18 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glDrawable.setGL(new DebugGL(gl));
 		System.out.println("Espaço de desenho com tamanho: " + drawable.getWidth() + " x " + drawable.getHeight());
 		gl.glClearColor(1f, 1f, 1f, 0f);
+		
+		// Inicia o desenho padrão
+		pontos[0][X] = -100;
+		pontos[0][Y] = -100;
+		pontos[1][X] = -100;
+		pontos[1][Y] =  100;
+		pontos[2][X] =  100;
+		pontos[2][Y] =  100;
+		pontos[3][X] =  100;
+		pontos[3][Y] = -100;
+					
+		
 	}
 	
 	public void SRU() {
@@ -82,17 +90,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 		 SRU();
 		 
-		 // seu desenho ...
-		 
-		 pontos[0][X] = -100;
-		 pontos[0][Y] = -100;
-		 pontos[1][X] = -100;
-		 pontos[1][Y] =  100;
-		 pontos[2][X] =  100;
-		 pontos[2][Y] =  100;
-		 pontos[3][X] =  100;
-		 pontos[3][Y] = -100;		 
-		 
 		 // Poliedro
 		 // |
 		 paintLine(pontos[0][X], pontos[0][Y],
@@ -103,17 +100,27 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		 // |
 		 paintLine(pontos[2][X], pontos[2][Y],
 				   pontos[3][X], pontos[3][Y]);
-		 		 
+		 
 		 // Spline
 		 desenhaSpline();
-		
+		 
+		 // Ponto em algum dos vértices do poliedro
+		 desenhaPonto();
+		 
 		 gl.glFlush();		 
 	}	
 	
+	public void desenhaPonto(){		 
+		 gl.glColor3f(1.0f, 0.0f, 0.0f);
+		 gl.glPointSize(4.0f);
+		 gl.glBegin( GL.GL_POINTS);
+		 	 gl.glVertex2f( pontos[opcao][X], pontos[opcao][Y] );				
+		 gl.glEnd();
+	}
 	public void paintLine(float line1PositionX, float line1PositionY,
 			  			  float line2PositionX, float line2PositionY){
 		gl.glColor3f(0.0f, 1.0f, 1.0f);
-		gl.glBegin( GL.GL_LINES);
+		gl.glBegin( GL.GL_LINE_STRIP);
 			gl.glVertex2f( line1PositionX, line1PositionY );
 			gl.glVertex2f( line2PositionX, line2PositionY );
 		gl.glEnd();
@@ -121,76 +128,111 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	
 	public float[] splineInterpolacao(float[] P1, float[] P2, int t){
 		float [] posicao = new float[2];
-		posicao[X] = P1[X] + (P2[X] - P1[X]) * t/QTD_PONTOS;
-		posicao[Y] = P1[Y] + (P2[Y] - P1[Y]) * t/QTD_PONTOS;
+		posicao[X] = P1[X] + (P2[X] - P1[X]) * t/qtdPontos;
+		posicao[Y] = P1[Y] + (P2[Y] - P1[Y]) * t/qtdPontos;
 		return posicao;
 	}
 	
 	public void desenhaSpline(){		
-		float [] P1P2, P2P3, P3P4, P1P2P3, P2P3P4, P1P2P3P4;			
+		float [] P1P2, P2P3, P3P4, P1P2P3, P2P3P4, P1P2P3P4;		
 		
-		for (int i = 0; i <= T; i++) {
-			P1P2 = splineInterpolacao(pontos[0], pontos[1], i);			
-			P2P3 = splineInterpolacao(pontos[1], pontos[2], i);
-			P3P4 = splineInterpolacao(pontos[2], pontos[3], i);
-			P1P2P3 = splineInterpolacao(P1P2, P2P3, i);
-			P2P3P4 = splineInterpolacao(P2P3, P3P4, i);
-			P1P2P3P4 = splineInterpolacao(P1P2P3, P2P3P4, i);
+			gl.glColor3f(1.0f, 1.0f, 0.0f);		 		 
+			gl.glLineWidth(1.0f);
+			gl.glBegin(GL.GL_LINE_STRIP);
 			
-			gl.glColor3f(0.0f, 0.0f, 1.0f);		 		 
-			gl.glPointSize(4.0f);
-			gl.glBegin(GL.GL_POINTS);
+			for (int i = 0; i <= qtdPontos; i++) {
+				
+				P1P2 = splineInterpolacao(pontos[0], pontos[1], i);			
+				P2P3 = splineInterpolacao(pontos[1], pontos[2], i);
+				P3P4 = splineInterpolacao(pontos[2], pontos[3], i);
+				P1P2P3 = splineInterpolacao(P1P2, P2P3, i);
+				P2P3P4 = splineInterpolacao(P2P3, P3P4, i);
+				P1P2P3P4 = splineInterpolacao(P1P2P3, P2P3P4, i);
+				
+			 	gl.glVertex2d(P1P2P3P4[X],P1P2P3P4[Y]);
 			 	
-//					gl.glVertex2d(P1P2[X],P1P2[Y]);
-//					gl.glVertex2d(P2P3[X],P2P3[Y]);
-//					gl.glVertex2d(P3P4[X],P3P4[Y]);
-//					gl.glVertex2d(P1P2P3[X],P1P2P3[Y]);
-//					gl.glVertex2d(P2P3P4[X],P2P3P4[Y]);
-//	 				gl.glVertex2d(pontos[1][X],pontos[1][Y]);			
-			 		gl.glVertex2d(P1P2P3P4[X],P1P2P3P4[Y]);		
+			}		
 			
 			gl.glEnd(); 		    
-			
-		    
-		    System.out.println("P1P2 x " + P1P2[X] ); 
-		    System.out.println("P1P2 y " + P1P2[Y] );
-		    System.out.println("P2P3 x " + P2P3[X] ); 
-		    System.out.println("P2P3 y " + P2P3[Y] );
-		    System.out.println("P3P4 x " + P3P4[X] ); 
-		    System.out.println("P3P4 y " + P3P4[Y] );
-			
-		    
-		    System.out.println("P1P2P3P4 x " + P1P2P3P4[X] ); 
-		    System.out.println("P1P2P3P4 y " + P1P2P3P4[Y] );
-			
-			
-		}		
+							
 	}
 
+	private void updateOrtho(float minX, float maxX, float minY, float maxY){		
+		if(this.ortho2D_minX + minX > -100)
+			return;		
+		if(this.ortho2D_minY + minY > -100)
+			return;
+		
+		if(this.ortho2D_minX + minX < -700)
+			return;
+		if(this.ortho2D_minY + minY < -700)
+			return;
+		
+		if(this.ortho2D_maxX + maxX < 100)
+			return;
+		if(this.ortho2D_maxY + maxY < 100)
+			return;
+		
+		if(this.ortho2D_maxX + maxX > 700)
+			return;
+		if(this.ortho2D_maxY + maxY > 700)
+			return;		
+		
+		this.ortho2D_minX += minX;
+		this.ortho2D_maxX += maxX;
+		
+		this.ortho2D_minY += minY;
+		this.ortho2D_maxY += maxY;
+		
+	}
+	
 	public void keyPressed(KeyEvent e) {
 		System.out.println(" --- keyPressed ---" + e.getKeyChar());
 		
 		switch(e.getKeyChar()){
 		case '1':
-			
+			opcao = 0;
 			break;
 		case '2':
-			
+			opcao = 1;
 			break;
 		case '3':
-			
+			opcao = 2;
 			break;
 		case '4':
-			
-			break;		
+			opcao = 3;
+			break;
+		case '-':
+			if (qtdPontos > 1) 
+				qtdPontos -= 1;			 
+			break;
+		case '+':
+			qtdPontos += 1;
+			break;
+		case 'i':
+			updateOrtho(50f, -50f, 50f, -50f);
+			break;
+		case 'o':
+			updateOrtho(-50f, 50f, -50f, 50f);
+			break;
+		case 'e':
+			updateOrtho(50f, 50f, 0f, 0f);
+			break;
+		case 'd':
+			updateOrtho(-50f, -50f, 0f, 0f);
+			break;
+		case 'c':
+			updateOrtho(0f, 0f, -50f, -50f);
+			break;
+		case 'b':
+			updateOrtho(0f, 0f, 50f, 50f);
+			break;	
 		}
 		
 		glDrawable.display();
+		
 	}
-
-	
-	
-	
+		
 	public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
 		System.out.println(" --- reshape ---");
 	}
@@ -207,25 +249,17 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		System.out.println(" --- keyTyped ---");
 	}
 	
-	public double RetornaX(double angulo, double raio) {
-		return (raio * Math.cos(Math.PI * angulo / 180.0));
-	}
-	
-	public double RetornaY(double angulo, double raio) {
-		return (raio * Math.sin(Math.PI * angulo / 180.0));
-	}
-	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 		int movtoX = e.getX() - antigoX;
 	    int movtoY = e.getY() - antigoY;
-	    valorX += movtoX;
-	    valorY -= movtoY;
+	    pontos[opcao][X] += movtoX;
+	    pontos[opcao][Y] -= movtoY;
 	    
 	    //Dump ...
 	    System.out.println("posMouse: "+movtoX+" / "+movtoY);
-	   
+	    
 	    antigoX = e.getX();
 		antigoY = e.getY();
 
