@@ -65,7 +65,7 @@ public class Main implements GLEventListener, KeyListener {
 		 gl.glPointSize(2.0f);
 		 gl.glBegin(GL.GL_POINTS);
 		 	for (int i = 0; i < 72; i++) {
-		 		gl.glVertex2d(RetornaX(i * 10, 90), RetornaY(i * 10, 90));
+		 		gl.glVertex2d(RetornaX(i * 10, 100), RetornaY(i * 10, 100));
 			}
 		    
 		 gl.glEnd();
