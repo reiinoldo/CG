@@ -27,6 +27,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private double atualX;
 	private double atualY;
 	private boolean desenharRastro;
+	private float[] cor = new float[3];
 	
 	// "render" feito logo apos a inicializacao do contexto OpenGL.
 	public void init(GLAutoDrawable drawable) {
@@ -40,6 +41,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.atribuirGL(gl);
+		}
+		
+		for (int i = 0; i < cor.length; i++) {
+			cor[i] = 0.0f;
 		}
 //		objeto.atribuirGL(gl);
 	}
@@ -60,7 +65,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		desenhaSRU();
 		
 		for (ObjetoGrafico objetoGrafico : objetos) {
-			objetoGrafico.desenha();
+			objetoGrafico.desenha(cor[0],cor[1],cor[2]);
 		}
 		
 		gl.glColor3f(0.3f, 0.6f, 0.0f);
@@ -144,6 +149,30 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_F:
 			desenharPoligono(GL.GL_LINE_LOOP,'f');
 			break;
+			//Desenhar os poligonos em vermelho
+		case KeyEvent.VK_R:
+			cor[0] = 1.0f;
+			cor[1] = 0.0f;
+			cor[2] = 0.0f;
+			break;
+			//Desenhar os poligonos em verde
+		case KeyEvent.VK_G:
+			cor[0] = 0.0f;
+			cor[1] = 1.0f;
+			cor[2] = 0.0f;
+			break;
+			//Desenhar os poligonos em azul
+		case KeyEvent.VK_B:
+			cor[0] = 0.0f;
+			cor[1] = 0.0f;
+			cor[2] = 1.0f;
+			break;
+			//Desenhar os poligonos em preto
+		case KeyEvent.VK_P:
+			cor[0] = 0.0f;
+			cor[1] = 0.0f;
+			cor[2] = 0.0f;
+			break;			
 		}
 
 		glDrawable.display();
@@ -178,7 +207,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	public void mouseMoved(MouseEvent arg0) {
 		atualX = arg0.getX() - ORIGEM_X;
 		atualY = (arg0.getY() - ORIGEM_Y) * -1;
-		glDrawable.display();
+		if(glDrawable != null)
+			glDrawable.display();
 	}
 
 	public void mouseClicked(MouseEvent arg0) {	

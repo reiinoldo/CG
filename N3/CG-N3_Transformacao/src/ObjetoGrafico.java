@@ -6,13 +6,7 @@ public class ObjetoGrafico {
 	private float tamanho;
 
 	private int primitiva; 
-	/*= GL.GL_LINE_LOOP;*/
 	private ArrayList<Ponto4D> vertices; 
-	/*= { 	
-			new Ponto4D(10.0, 10.0, 0.0, 1.0),
-			new Ponto4D(20.0, 10.0, 0.0, 1.0), 
-			new Ponto4D(20.0, 20.0, 0.0, 1.0),
-			new Ponto4D(10.0, 20.0, 0.0, 1.0) };*/
 
 	private Transformacao4D matrizObjeto = new Transformacao4D();
 
@@ -51,8 +45,8 @@ public class ObjetoGrafico {
 		return primitiva;
 	}
 	
-	public void desenha() {
-		gl.glColor3f(0.0f, 0.0f, 0.0f);
+	public void desenha(float R, float G, float B) {
+		gl.glColor3f(R,G,B);
 		gl.glLineWidth(tamanho);
 		gl.glPointSize(tamanho);
 
@@ -92,7 +86,7 @@ public class ObjetoGrafico {
 	public void atribuirIdentidade() {
 //		anguloGlobal = 0.0;
 		matrizObjeto.atribuirIdentidade();
-	}
+	}	
 
 	public void escalaXYZPtoFixo(double escala, Ponto4D ptoFixo) {
 		matrizGlobal.atribuirIdentidade();
