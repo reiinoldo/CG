@@ -19,8 +19,14 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private ArrayList<ObjetoGrafico> objetos = new ArrayList<ObjetoGrafico>();
 	private ObjetoGrafico objGrafico;
 	boolean criandoObjeto;
+	char ultimaTecla;
 	private static final int ORIGEM_X = 240;
 	private static final int ORIGEM_Y = 230;
+	private double ultimoX;
+	private double ultimoY;
+	private double atualX;
+	private double atualY;
+	private boolean desenharRastro;
 	
 	// "render" feito logo apos a inicializacao do contexto OpenGL.
 	public void init(GLAutoDrawable drawable) {
@@ -56,9 +62,12 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenha();
 		}
-
-//		objeto.desenha();
-
+		
+		gl.glColor3f(0.3f, 0.6f, 0.0f);
+		gl.glLineWidth(2);
+		gl.glPointSize(2);		
+		desenhaRastro();
+		
 		gl.glFlush();
 	}
 
@@ -69,7 +78,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glBegin( GL.GL_LINES );
 			gl.glVertex2f( -120.0f, 0.0f );
 			gl.glVertex2f(  120.0f, 0.0f );
-			gl.glEnd();
+		gl.glEnd();
 		// eixo y
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		gl.glBegin( GL.GL_LINES);
@@ -129,11 +138,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			break;*/
 			//Desenhar poligno aberto
 		case KeyEvent.VK_A:
-			desenharPoligono(GL.GL_LINE_STRIP);
+			desenharPoligono(GL.GL_LINE_STRIP,'a');
 			break;
 			//Desenhar poligono fechado
 		case KeyEvent.VK_F:
-			desenharPoligono(GL.GL_LINE_LOOP);
+			desenharPoligono(GL.GL_LINE_LOOP,'f');
 			break;
 		}
 
@@ -163,13 +172,13 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	}
 
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		atualX = arg0.getX() - ORIGEM_X;
+		atualY = (arg0.getY() - ORIGEM_Y) * -1;
+		glDrawable.display();
 	}
 
 	public void mouseClicked(MouseEvent arg0) {	
@@ -195,6 +204,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			
 			objGrafico.addPonto4D(ponto);
 			System.out.println("ponto adicionado! X: " + ponto.obterX() + " Y: " + ponto.obterY());
+			ultimoX = ponto.obterX();
+			ultimoY = ponto.obterY();
+			desenharRastro = true;
+			
+			glDrawable.display();
 		}	
 	}
 
@@ -203,16 +217,26 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 	}
 	
-	private void desenharPoligono(int primitiva){
+	private void desenharPoligono(int primitiva, char tecla){
 		System.out.println("Tecla pressionada!");
 		if(criandoObjeto == false){
 			objGrafico = new ObjetoGrafico(primitiva, gl);
+			objetos.add(objGrafico);
 			criandoObjeto = true;
-		} else{
+			ultimaTecla = tecla;
+		} else if(ultimaTecla == tecla){
 			System.out.println("Encerrando poligono");
 			criandoObjeto = false;
-			objetos.add(objGrafico);
+			desenharRastro = false;
 		}	
 	}
-
+	
+	private void desenhaRastro() {
+		if(desenharRastro == true){			
+			gl.glBegin(GL.GL_LINES);
+				gl.glVertex2d(ultimoX, ultimoY);
+				gl.glVertex2d(atualX, atualY);
+			gl.glEnd();
+		}
+	}
 }
