@@ -112,22 +112,30 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 		case KeyEvent.VK_R:
 			objetos[0].atribuirIdentidade();
-			break;
+			break;*/
 
 		case KeyEvent.VK_RIGHT:
-			objetos[0].translacaoXYZ(2.0,0.0,0.0);
+			if(objGrafico != null){
+				objGrafico.translacaoXYZ(2.0,0.0,0.0);
+			}
 			break;
 		case KeyEvent.VK_LEFT:
-			objetos[0].translacaoXYZ(-2.0,0.0,0.0);
+			if(objGrafico != null){
+				objGrafico.translacaoXYZ(-2.0,0.0,0.0);
+			}
 			break;
 		case KeyEvent.VK_UP:
-			objetos[0].translacaoXYZ(0.0,2.0,0.0);
+			if(objGrafico != null){
+				objGrafico.translacaoXYZ(0.0,2.0,0.0);
+			}
 			break;
 		case KeyEvent.VK_DOWN:
-			objetos[0].translacaoXYZ(0.0,-2.0,0.0);
+			if(objGrafico != null){
+				objGrafico.translacaoXYZ(0.0,-2.0,0.0);
+			}
 			break;
 
-		case KeyEvent.VK_PAGE_UP:
+		/*case KeyEvent.VK_PAGE_UP:
 			objetos[0].escalaXYZ(2.0,2.0);
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
