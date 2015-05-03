@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 import javax.media.opengl.GL;
 public class ObjetoGrafico {
 	GL gl;
@@ -151,24 +152,29 @@ public class ObjetoGrafico {
 	//Marcar um ponto como selecionado
 	public Ponto4D selecionarPonto(Ponto4D pontoExterno){
 		Ponto4D retorno = null;
+		Ponto4D pontoObjTranformado;
+
 		for (Ponto4D pontoObjeto : vertices) {
-			System.out.println("ptO x: " + pontoObjeto.obterX() + "ptE x: " + pontoExterno.obterX());
-			System.out.println("ptO y: " + pontoObjeto.obterY() + "ptE y: " + pontoExterno.obterY()) ;
-			System.out.println("ptO z: " + pontoObjeto.obterZ() + "ptE z: " + pontoExterno.obterZ()) ;
+
 			pontoObjeto.atribuiSelecionado(false);
 			
-			if((pontoObjeto.obterX() <= pontoExterno.obterX() + 5 &&
-				pontoObjeto.obterX() >= pontoExterno.obterX() - 5) &&
+			pontoObjTranformado = new Ponto4D();
+			pontoObjTranformado.atribuirX(pontoObjeto.obterX());
+			pontoObjTranformado.atribuirY(pontoObjeto.obterY());
+			pontoObjTranformado.atribuirZ(pontoObjeto.obterZ());
+			pontoObjTranformado = matrizObjeto.transformPoint(pontoObjTranformado);
+			
+			if((pontoObjTranformado.obterX() <= pontoExterno.obterX() + 5 &&
+				pontoObjTranformado.obterX() >= pontoExterno.obterX() - 5) &&
 					
-			   (pontoObjeto.obterY() <= pontoExterno.obterY() + 5 &&
-				pontoObjeto.obterY() >= pontoExterno.obterY() - 5) &&
+			   (pontoObjTranformado.obterY() <= pontoExterno.obterY() + 5 &&
+			    pontoObjTranformado.obterY() >= pontoExterno.obterY() - 5) &&
 				
-			   (pontoObjeto.obterZ() <= pontoExterno.obterZ() + 5 &&
-				pontoObjeto.obterZ() >= pontoExterno.obterZ() - 5)				
+			   (pontoObjTranformado.obterZ() <= pontoExterno.obterZ() + 5 &&
+				pontoObjTranformado.obterZ() >= pontoExterno.obterZ() - 5)				
 				
 				){
 				pontoObjeto.atribuiSelecionado(true);
-				System.out.println("é igual");
 				retorno = pontoObjeto;
 			}
 		}
