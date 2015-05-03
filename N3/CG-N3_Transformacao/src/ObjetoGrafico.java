@@ -52,7 +52,6 @@ public class ObjetoGrafico {
 	}
 	
 	public void desenha() {
-		System.out.println("Desenhando novo objeto");
 		gl.glColor3f(0.0f, 0.0f, 0.0f);
 		gl.glLineWidth(tamanho);
 		gl.glPointSize(tamanho);
@@ -60,9 +59,7 @@ public class ObjetoGrafico {
 		gl.glPushMatrix();
 			gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
 			gl.glBegin(primitiva);
-			System.out.println("primitiva: " + primitiva);
 			    for (Ponto4D ponto4D : vertices) {
-			    	System.out.println("x: " + ponto4D.obterX() + " Y: " + ponto4D.obterY());
 			    	gl.glVertex2d(ponto4D.obterX(), ponto4D.obterY());
 				}
 			gl.glEnd();
