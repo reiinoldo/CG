@@ -27,6 +27,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private double atualX;
 	private double atualY;
 	private boolean desenharRastro;
+	private boolean desenharBB;
 	private float[] cor = new float[3];
 	private Ponto4D verticeSelecionado;
 	
@@ -39,10 +40,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		criandoObjeto = false;
-
-		for (ObjetoGrafico objetoGrafico : objetos) {
-			objetoGrafico.atribuirGL(gl);
+		
+		for (ObjetoGrafico objetoGrafico : objetos) {			
+			objetoGrafico.atribuirGL(gl);			
 		}
+		
 		
 		for (int i = 0; i < cor.length; i++) {
 			cor[i] = 0.0f;
@@ -67,7 +69,12 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenha(cor[0],cor[1],cor[2]);
+			if (desenharBB){
+				objetoGrafico.desenhaBBox();
+			}	
 		}
+			
+		desenharBB = false;
 		
 		gl.glColor3f(1.0f, 1.0f, 0.0f);
 		gl.glLineWidth(2);
@@ -181,6 +188,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			}
 			verticeSelecionado = null;
 			break;
+			
+		case KeyEvent.VK_O:
+			desenharBB = true;
+			break;	
 		}
 
 		glDrawable.display();

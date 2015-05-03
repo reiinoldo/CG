@@ -1,8 +1,8 @@
 import java.util.ArrayList;
-
 import javax.media.opengl.GL;
 public class ObjetoGrafico {
 	GL gl;
+	BBox bb;
 	private float tamanho;
 
 	private int primitiva; 
@@ -23,6 +23,7 @@ public class ObjetoGrafico {
 		this.vertices = new ArrayList<Ponto4D>();
 		this.tamanho = 2.0f;
 		this.gl = gl;
+		this.bb = new BBox(gl);
 	}
 	
 	public void addPonto4D(Ponto4D ponto){
@@ -63,7 +64,19 @@ public class ObjetoGrafico {
 
 			//////////// ATENCAO: chamar desenho dos filhos... 
 
-		gl.glPopMatrix();
+		gl.glPopMatrix();		
+		
+	}
+	
+	public void desenhaBBox(){	
+		if (!vertices.isEmpty()){
+			System.out.println("desenhaBBox");
+			bb.setarXmin(vertices.get(0).obterX());
+			bb.setarYmin(vertices.get(0).obterY());
+			bb.setarXmax(vertices.get(vertices.size()-1).obterX());
+			bb.setarYmax(vertices.get(vertices.size()-1).obterY());
+			bb.desenhaBB();
+		}
 	}
 
 	public void translacaoXYZ(double tx, double ty, double tz) {
