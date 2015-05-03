@@ -70,14 +70,33 @@ public class ObjetoGrafico {
 	}
 	
 	public void desenhaBBox(){	
-		if (!vertices.isEmpty()){
-			System.out.println("desenhaBBox");
-			bb.setarXmin(vertices.get(0).obterX());
-			bb.setarYmin(vertices.get(0).obterY());
-			bb.setarXmax(vertices.get(vertices.size()-1).obterX());
-			bb.setarYmax(vertices.get(vertices.size()-1).obterY());
-			bb.desenhaBB();
+		double minX = 1000;
+		double minY = 1000;
+		double maxX = 0;
+		double maxY = 0;
+		System.out.println("desenhaBBox");
+								
+		for (Ponto4D ponto4d : vertices) {
+			if (ponto4d.obterX() <= minX){
+				minX = ponto4d.obterX();
+			}
+			if (ponto4d.obterY() <= minY){
+				minY = ponto4d.obterY();
+			}
+			if (ponto4d.obterX() >= maxX){
+				maxX = ponto4d.obterX();
+			}				
+			if (ponto4d.obterY() >= maxY){
+				maxY = ponto4d.obterY();
+			}		
+							
 		}
+		
+		bb.setarXmin(minX);
+		bb.setarYmin(minY);
+		bb.setarXmax(maxX);
+		bb.setarYmax(maxY);
+		bb.desenhaBB();
 	}
 
 	public void translacaoXYZ(double tx, double ty, double tz) {
