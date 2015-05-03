@@ -1,21 +1,26 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.media.opengl.DebugGL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class Main implements GLEventListener, KeyListener {
+public class Main implements GLEventListener, KeyListener, MouseListener, MouseMotionListener {
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-
-//	private ObjetoGrafico objeto = new ObjetoGrafico();
-	private ObjetoGrafico[] objetos = { 
-			new ObjetoGrafico(),
-			new ObjetoGrafico() };
+	
+	private ArrayList<ObjetoGrafico> objetos = new ArrayList<ObjetoGrafico>();
+	private ObjetoGrafico objGrafico;
+	boolean criandoObjeto;
+	private static final int ORIGEM_X = 240;
+	private static final int ORIGEM_Y = 230;
 	
 	// "render" feito logo apos a inicializacao do contexto OpenGL.
 	public void init(GLAutoDrawable drawable) {
@@ -25,9 +30,10 @@ public class Main implements GLEventListener, KeyListener {
 		glDrawable.setGL(new DebugGL(gl));
 
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		criandoObjeto = false;
 
-		for (byte i=0; i < objetos.length; i++) {
-			objetos[i].atribuirGL(gl);
+		for (ObjetoGrafico objetoGrafico : objetos) {
+			objetoGrafico.atribuirGL(gl);
 		}
 //		objeto.atribuirGL(gl);
 	}
@@ -40,14 +46,15 @@ public class Main implements GLEventListener, KeyListener {
 		gl.glLoadIdentity();
 
 		// configurar window
-		glu.gluOrtho2D(-30.0f, 30.0f, -30.0f, 30.0f);
+		glu.gluOrtho2D(-240.0f, 240.0f, -230.0f, 230.0f);
 
 		gl.glLineWidth(1.0f);
 		gl.glPointSize(1.0f);
 
 		desenhaSRU();
-		for (byte i=0; i < objetos.length; i++) {
-			objetos[i].desenha();
+		
+		for (ObjetoGrafico objetoGrafico : objetos) {
+			objetoGrafico.desenha();
 		}
 
 //		objeto.desenha();
@@ -55,23 +62,26 @@ public class Main implements GLEventListener, KeyListener {
 		gl.glFlush();
 	}
 
-	public void desenhaSRU() {
+	public void desenhaSRU() {	
+		// eixo x
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-			gl.glVertex2f(-20.0f, 0.0f);
-			gl.glVertex2f(20.0f, 0.0f);
-		gl.glEnd();
+		gl.glLineWidth(1.0f);
+		gl.glBegin( GL.GL_LINES );
+			gl.glVertex2f( -120.0f, 0.0f );
+			gl.glVertex2f(  120.0f, 0.0f );
+			gl.glEnd();
+		// eixo y
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
-		gl.glBegin(GL.GL_LINES);
-			gl.glVertex2f(0.0f, -20.0f);
-			gl.glVertex2f(0.0f, 20.0f);
+		gl.glBegin( GL.GL_LINES);
+			gl.glVertex2f(  0.0f, -115.0f);
+			gl.glVertex2f(  0.0f, 115.0f );
 		gl.glEnd();
 	}
 	
 	public void keyPressed(KeyEvent e) {
 
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_P:
+		/*case KeyEvent.VK_P:
 			objetos[0].exibeVertices();
 			break;
 		case KeyEvent.VK_M:
@@ -114,9 +124,17 @@ public class Main implements GLEventListener, KeyListener {
 			objetos[0].escalaXYZPtoFixo(2.0, new Ponto4D(-15.0,-15.0,0.0,0.0));
 			break;
 			
-			case KeyEvent.VK_3:
-				objetos[0].rotacaoZPtoFixo(10.0, new Ponto4D(-15.0,-15.0,0.0,0.0));
-				break;
+		case KeyEvent.VK_3:
+			objetos[0].rotacaoZPtoFixo(10.0, new Ponto4D(-15.0,-15.0,0.0,0.0));
+			break;*/
+			//Desenhar poligno aberto
+		case KeyEvent.VK_A:
+			desenharPoligono(GL.GL_LINE_STRIP);
+			break;
+			//Desenhar poligono fechado
+		case KeyEvent.VK_F:
+			desenharPoligono(GL.GL_LINE_LOOP);
+			break;
 		}
 
 		glDrawable.display();
@@ -142,6 +160,59 @@ public class Main implements GLEventListener, KeyListener {
 
 	public void keyTyped(KeyEvent arg0) {
 		// System.out.println(" --- keyTyped ---");
+	}
+
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mouseClicked(MouseEvent arg0) {	
+		// TODO Auto-generated method stub
+	}
+
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mousePressed(MouseEvent arg0) {
+		if(criandoObjeto == true){
+			Ponto4D ponto = new Ponto4D();
+			ponto.atribuirX(arg0.getX() - ORIGEM_X);
+			ponto.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
+			ponto.atribuirZ(0);
+			
+			objGrafico.addPonto4D(ponto);
+			System.out.println("ponto adicionado! X: " + ponto.obterX() + " Y: " + ponto.obterY());
+		}	
+	}
+
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void desenharPoligono(int primitiva){
+		System.out.println("Tecla pressionada!");
+		if(criandoObjeto == false){
+			objGrafico = new ObjetoGrafico(primitiva, gl);
+			criandoObjeto = true;
+		} else{
+			System.out.println("Encerrando poligono");
+			criandoObjeto = false;
+			objetos.add(objGrafico);
+		}	
 	}
 
 }

@@ -1,17 +1,18 @@
-import javax.media.opengl.GL;
-public final class ObjetoGrafico {
-	GL gl;
-	private float tamanho = 2.0f;
+import java.util.ArrayList;
 
-	private int primitiva = GL.GL_LINE_LOOP;
-	private Ponto4D[] vertices = { 	
+import javax.media.opengl.GL;
+public class ObjetoGrafico {
+	GL gl;
+	private float tamanho;
+
+	private int primitiva; 
+	/*= GL.GL_LINE_LOOP;*/
+	private ArrayList<Ponto4D> vertices; 
+	/*= { 	
 			new Ponto4D(10.0, 10.0, 0.0, 1.0),
 			new Ponto4D(20.0, 10.0, 0.0, 1.0), 
 			new Ponto4D(20.0, 20.0, 0.0, 1.0),
-			new Ponto4D(10.0, 20.0, 0.0, 1.0) };
-
-//	private int primitiva = GL.GL_POINTS;
-//	private Ponto4D[] vertices = { new Ponto4D(10.0, 10.0, 0.0, 1.0) };	
+			new Ponto4D(10.0, 20.0, 0.0, 1.0) };*/
 
 	private Transformacao4D matrizObjeto = new Transformacao4D();
 
@@ -23,7 +24,19 @@ public final class ObjetoGrafico {
 	private static Transformacao4D matrizGlobal = new Transformacao4D();
 //	private double anguloGlobal = 0.0;
 	
-	public ObjetoGrafico() {
+	public ObjetoGrafico(int primitiva, GL gl) {
+		this.primitiva = primitiva;
+		this.vertices = new ArrayList<Ponto4D>();
+		this.tamanho = 2.0f;
+		this.gl = gl;
+	}
+	
+	public void addPonto4D(Ponto4D ponto){
+		this.vertices.add(ponto);
+	}
+	
+	public void removePonto4D(Ponto4D ponto){
+		this.vertices.remove(ponto);
 	}
 
 	public void atribuirGL(GL gl) {
@@ -39,6 +52,7 @@ public final class ObjetoGrafico {
 	}
 	
 	public void desenha() {
+		System.out.println("Desenhando novo objeto");
 		gl.glColor3f(0.0f, 0.0f, 0.0f);
 		gl.glLineWidth(tamanho);
 		gl.glPointSize(tamanho);
@@ -46,8 +60,10 @@ public final class ObjetoGrafico {
 		gl.glPushMatrix();
 			gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
 			gl.glBegin(primitiva);
-				for (byte i=0; i < vertices.length; i++) {
-					gl.glVertex2d(vertices[i].obterX(), vertices[i].obterY());
+			System.out.println("primitiva: " + primitiva);
+			    for (Ponto4D ponto4D : vertices) {
+			    	System.out.println("x: " + ponto4D.obterX() + " Y: " + ponto4D.obterY());
+			    	gl.glVertex2d(ponto4D.obterX(), ponto4D.obterY());
 				}
 			gl.glEnd();
 
@@ -118,10 +134,10 @@ public final class ObjetoGrafico {
 	}
 
 	public void exibeVertices() {
-		System.out.println("P0[" + vertices[0].obterX() + "," + vertices[0].obterY() + "," + vertices[0].obterZ() + "," + vertices[0].obterW() + "]");
+		/*System.out.println("P0[" + vertices[0].obterX() + "," + vertices[0].obterY() + "," + vertices[0].obterZ() + "," + vertices[0].obterW() + "]");
 		System.out.println("P1[" + vertices[1].obterX() + "," + vertices[1].obterY() + "," + vertices[1].obterZ() + "," + vertices[1].obterW() + "]");
 		System.out.println("P2[" + vertices[2].obterX() + "," + vertices[2].obterY() + "," + vertices[2].obterZ() + "," + vertices[2].obterW() + "]");
-		System.out.println("P3[" + vertices[3].obterX() + "," + vertices[3].obterY() + "," + vertices[3].obterZ() + "," + vertices[3].obterW() + "]");
+		System.out.println("P3[" + vertices[3].obterX() + "," + vertices[3].obterY() + "," + vertices[3].obterZ() + "," + vertices[3].obterW() + "]");*/
 //		System.out.println("anguloGlobal:" + anguloGlobal);
 	}
 
