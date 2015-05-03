@@ -8,11 +8,12 @@
 /// A classe Ponto4D fornece uma forma unificada de representar objetos com pontos e vetores, facilitando as operacoes entre estes "dois" tipos de entidade,
 /// juntamente com a integracao com a classe Transformacao4D. O ponto 4D homogeneo eh representado por um vector ( x , y , z, w ).
 /// A coordenada W eh 0 para vetores e 1 para pontos normalizados.
-public final class Ponto4D {
+public class Ponto4D {
 	private double x; /// valor X.
 	private double y; /// valor Y.
 	private double z; /// valor Z.
 	private double w; /// valor W.
+	private boolean selecionado;
 
 	 /// Cria o ponto (0,0,0,1).
 	public Ponto4D() {
@@ -67,6 +68,14 @@ public final class Ponto4D {
 	/// Atribuir valor Z do ponto.
 	public void atribuirZ(double z) {
 		this.z = z;
+	}
+	
+	public boolean obterSelcionado(){
+		return this.selecionado;
+	}
+	
+	public void atribuiSelecionado(boolean selecionado){
+		this.selecionado = selecionado;
 	}
 
 	/// Atribuir valor W do ponto.

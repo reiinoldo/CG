@@ -46,7 +46,6 @@ public class ObjetoGrafico {
 	}
 	
 	public void desenha(float R, float G, float B) {
-		gl.glColor3f(R,G,B);
 		gl.glLineWidth(tamanho);
 		gl.glPointSize(tamanho);
 
@@ -54,6 +53,10 @@ public class ObjetoGrafico {
 			gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
 			gl.glBegin(primitiva);
 			    for (Ponto4D ponto4D : vertices) {
+					gl.glColor3f(R,G,B);
+			    	if(ponto4D.obterSelcionado() == true){
+			    		gl.glColor3f(1.0f,1.0f,0.0f);
+			    	}
 			    	gl.glVertex2d(ponto4D.obterX(), ponto4D.obterY());
 				}
 			gl.glEnd();
@@ -131,7 +134,43 @@ public class ObjetoGrafico {
 		System.out.println("P3[" + vertices[3].obterX() + "," + vertices[3].obterY() + "," + vertices[3].obterZ() + "," + vertices[3].obterW() + "]");*/
 //		System.out.println("anguloGlobal:" + anguloGlobal);
 	}
-
+	
+	//Marcar um ponto como selecionado
+	public Ponto4D selecionarPonto(Ponto4D pontoExterno){
+		Ponto4D retorno = null;
+		for (Ponto4D pontoObjeto : vertices) {
+			System.out.println("ptO x: " + pontoObjeto.obterX() + "ptE x: " + pontoExterno.obterX());
+			System.out.println("ptO y: " + pontoObjeto.obterY() + "ptE y: " + pontoExterno.obterY()) ;
+			System.out.println("ptO z: " + pontoObjeto.obterZ() + "ptE z: " + pontoExterno.obterZ()) ;
+			pontoObjeto.atribuiSelecionado(false);
+			
+			if((pontoObjeto.obterX() <= pontoExterno.obterX() + 5 &&
+				pontoObjeto.obterX() >= pontoExterno.obterX() - 5) &&
+					
+			   (pontoObjeto.obterY() <= pontoExterno.obterY() + 5 &&
+				pontoObjeto.obterY() >= pontoExterno.obterY() - 5) &&
+				
+			   (pontoObjeto.obterZ() <= pontoExterno.obterZ() + 5 &&
+				pontoObjeto.obterZ() >= pontoExterno.obterZ() - 5)				
+				
+				){
+				pontoObjeto.atribuiSelecionado(true);
+				System.out.println("é igual");
+				retorno = pontoObjeto;
+			}
+		}
+		return retorno;
+	}
+	
+	//Remover o ponto selecionado do objeto grafico
+	public void deletarSelecionado(){
+		for (Ponto4D ponto4d : vertices) {
+			if(ponto4d.obterSelcionado() == true){
+				vertices.remove(ponto4d);
+				return;
+			}
+		}
+	}
 	
 }
 

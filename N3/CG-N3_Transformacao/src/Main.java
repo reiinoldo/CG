@@ -28,6 +28,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private double atualY;
 	private boolean desenharRastro;
 	private float[] cor = new float[3];
+	private Ponto4D verticeSelecionado;
 	
 	// "render" feito logo apos a inicializacao do contexto OpenGL.
 	public void init(GLAutoDrawable drawable) {
@@ -68,7 +69,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			objetoGrafico.desenha(cor[0],cor[1],cor[2]);
 		}
 		
-		gl.glColor3f(0.3f, 0.6f, 0.0f);
+		gl.glColor3f(1.0f, 1.0f, 0.0f);
 		gl.glLineWidth(2);
 		gl.glPointSize(2);		
 		desenhaRastro();
@@ -172,7 +173,14 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			cor[0] = 0.0f;
 			cor[1] = 0.0f;
 			cor[2] = 0.0f;
-			break;			
+			break;
+			//Deletara ponto selecionado
+		case KeyEvent.VK_D:
+			for (ObjetoGrafico objetoGrafico : objetos) {
+				objetoGrafico.deletarSelecionado();
+			}
+			verticeSelecionado = null;
+			break;
 		}
 
 		glDrawable.display();
@@ -201,10 +209,16 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	}
 
 	public void mouseDragged(MouseEvent arg0) {
-
+		//Movimentar o vertice selecionado
+		if(verticeSelecionado != null){
+			verticeSelecionado.atribuirX(arg0.getX() - ORIGEM_X);
+			verticeSelecionado.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
+		}
+		glDrawable.display();
 	}
 
 	public void mouseMoved(MouseEvent arg0) {
+		//Salvar posicao atual do mouse para poder desenhar o rastro
 		atualX = arg0.getX() - ORIGEM_X;
 		atualY = (arg0.getY() - ORIGEM_Y) * -1;
 		if(glDrawable != null)
@@ -226,36 +240,41 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	}
 
 	public void mousePressed(MouseEvent arg0) {
-		if(criandoObjeto == true){
-			Ponto4D ponto = new Ponto4D();
-			ponto.atribuirX(arg0.getX() - ORIGEM_X);
-			ponto.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
-			ponto.atribuirZ(0);
-			
+		Ponto4D ponto = new Ponto4D();
+		ponto.atribuirX(arg0.getX() - ORIGEM_X);
+		ponto.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
+		ponto.atribuirZ(0);
+				
+		if(criandoObjeto == true){		
+			//Adicionando pontos ao poligono que esta sendo criado
 			objGrafico.addPonto4D(ponto);
-			System.out.println("ponto adicionado! X: " + ponto.obterX() + " Y: " + ponto.obterY());
+			//Salvando posicao do ultimo ponto adicionado para poder desenhar o rastro
 			ultimoX = ponto.obterX();
 			ultimoY = ponto.obterY();
 			desenharRastro = true;
 			
 			glDrawable.display();
-		}	
+		} else{
+			//Verificar se o clique foi sobre um ponto e marcar o mesmo como selecionado
+			for (ObjetoGrafico objetoGrafico : objetos) {
+				verticeSelecionado = objetoGrafico.selecionarPonto(ponto);
+			}
+		}
 	}
 
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 	
 	private void desenharPoligono(int primitiva, char tecla){
-		System.out.println("Tecla pressionada!");
 		if(criandoObjeto == false){
+			//Iniciando criacao do poligono
 			objGrafico = new ObjetoGrafico(primitiva, gl);
 			objetos.add(objGrafico);
 			criandoObjeto = true;
 			ultimaTecla = tecla;
 		} else if(ultimaTecla == tecla){
-			System.out.println("Encerrando poligono");
+			//Encerrando criacao poligono
 			criandoObjeto = false;
 			desenharRastro = false;
 		}	
