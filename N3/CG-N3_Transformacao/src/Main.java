@@ -68,7 +68,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		desenhaSRU();
 		
 		for (ObjetoGrafico objetoGrafico : objetos) {
-			objetoGrafico.desenha(cor[0],cor[1],cor[2]);
+			objetoGrafico.desenha();
 			if (desenharBB){
 				objetoGrafico.desenhaBBox();
 			}	
@@ -167,27 +167,27 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			break;
 			//Desenhar os poligonos em vermelho
 		case KeyEvent.VK_R:
-			cor[0] = 1.0f;
-			cor[1] = 0.0f;
-			cor[2] = 0.0f;
+			if(objGrafico != null){
+				objGrafico.atribuirCor(1.0f, 0.0f, 0.0f);
+			}
 			break;
 			//Desenhar os poligonos em verde
 		case KeyEvent.VK_G:
-			cor[0] = 0.0f;
-			cor[1] = 1.0f;
-			cor[2] = 0.0f;
+			if(objGrafico != null){
+				objGrafico.atribuirCor(0.0f, 1.0f, 0.0f);
+			}
 			break;
 			//Desenhar os poligonos em azul
 		case KeyEvent.VK_B:
-			cor[0] = 0.0f;
-			cor[1] = 0.0f;
-			cor[2] = 1.0f;
+			if(objGrafico != null){
+				objGrafico.atribuirCor(0.0f, 0.0f, 1.0f);
+			}
 			break;
 			//Desenhar os poligonos em preto
 		case KeyEvent.VK_P:
-			cor[0] = 0.0f;
-			cor[1] = 0.0f;
-			cor[2] = 0.0f;
+			if(objGrafico != null){
+				objGrafico.atribuirCor(0.0f, 0.0f, 0.0f);
+			}
 			break;
 			//Deletara ponto selecionado
 		case KeyEvent.VK_D:

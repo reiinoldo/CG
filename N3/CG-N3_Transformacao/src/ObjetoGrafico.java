@@ -5,6 +5,9 @@ public class ObjetoGrafico {
 	GL gl;
 	BBox bb;
 	private float tamanho;
+	private float R;
+	private float G;
+	private float B;
 
 	private int primitiva; 
 	private ArrayList<Ponto4D> vertices; 
@@ -47,7 +50,7 @@ public class ObjetoGrafico {
 		return primitiva;
 	}
 	
-	public void desenha(float R, float G, float B) {
+	public void desenha() {
 		gl.glLineWidth(tamanho);
 		gl.glPointSize(tamanho);
 
@@ -208,6 +211,12 @@ public class ObjetoGrafico {
 				return;
 			}
 		}
+	}
+	
+	public void atribuirCor(float R, float G, float B){
+		this.R = R;
+		this.G = G;
+		this.B = B;
 	}
 	
 }
