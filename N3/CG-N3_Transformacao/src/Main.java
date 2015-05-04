@@ -34,7 +34,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private ObjetoGrafico objPai;
 	private boolean inserirFilhos = false;
 	
-	// "render" feito logo apos a inicializacao do contexto OpenGL.
+	/** "render" feito logo apos a inicializacao do contexto OpenGL. **/
 	public void init(GLAutoDrawable drawable) {
 		glDrawable = drawable;
 		gl = drawable.getGL();
@@ -55,8 +55,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 //		objeto.atribuirGL(gl);
 	}
 
-	// metodo definido na interface GLEventListener.
-	// "render" feito pelo cliente OpenGL.
+	/**  metodo definido na interface GLEventListener.
+	     "render" feito pelo cliente OpenGL. **/	     
 	public void display(GLAutoDrawable arg0) {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -87,6 +87,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glFlush();
 	}
 
+	/** desenha a cruz (X -->, Y î ) **/
 	public void desenhaSRU() {	
 		// eixo x
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
@@ -103,6 +104,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glEnd();
 	}
 	
+	/** Dependendo da tecla pressionada fará as alterações nos objetos desenhados **/
 	public void keyPressed(KeyEvent e) {
 
 		switch (e.getKeyCode()) {
@@ -245,8 +247,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		// System.out.println(" --- keyTyped ---");
 	}
 
-	public void mouseDragged(MouseEvent arg0) {
-		//Movimentar o vertice selecionado
+	/**
+	 * Movimentar o vertice selecionado
+	 */
+	public void mouseDragged(MouseEvent arg0) {		
 		
 		if(verticeSelecionado != null){
 			System.out.println("Entrou dragged");
@@ -256,22 +260,22 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glDrawable.display();
 	}
 
-	public void mouseMoved(MouseEvent arg0) {
-		//Salvar posicao atual do mouse para poder desenhar o rastro
+	/**
+	 * Salvar posicao atual do mouse para poder desenhar o rastro
+	 */
+	public void mouseMoved(MouseEvent arg0) {		
 		atualX = arg0.getX() - ORIGEM_X;
 		atualY = (arg0.getY() - ORIGEM_Y) * -1;
 		if(glDrawable != null)
 			glDrawable.display();
 	}
 
-	public void mouseClicked(MouseEvent arg0) {	
-		// TODO Auto-generated method stub
+	/**
+	 * Usado para receber o ponto de onde foi clicado para selecionar o objeto
+	 */
+	public void mouseClicked(MouseEvent arg0) {		
 		xClicado = arg0.getX() - ORIGEM_X;
-		yClicado = (arg0.getY() - ORIGEM_Y) * -1;
-		
-		System.out.println("xClicado" + xClicado);
-		System.out.println("yClicado" + yClicado);
-		
+		yClicado = (arg0.getY() - ORIGEM_Y) * -1;		
 		glDrawable.display();
 	}
 
@@ -285,6 +289,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 	}
 
+	/**
+	 * Adicionar ou selecionar pontos do objeto
+	 */
 	public void mousePressed(MouseEvent arg0) {
 		Ponto4D ponto = new Ponto4D();
 		ponto.atribuirX(arg0.getX() - ORIGEM_X);
@@ -321,6 +328,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		// TODO Auto-generated method stub		
 	}
 	
+	/**
+	 * Cria o poligono se for convexo ou concavo
+	 * @param primitiva
+	 * @param tecla
+	 */
 	private void desenharPoligono(int primitiva, char tecla){
 		if(criandoObjeto == false){
 			//Iniciando criacao do poligono
@@ -339,6 +351,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		}	
 	}
 	
+	/**
+	 * Desenha o rastro durante a inserção dos pontos
+	 */
 	private void desenhaRastro() {
 		if(desenharRastro == true){			
 			gl.glBegin(GL.GL_LINES);

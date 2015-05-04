@@ -8,11 +8,15 @@ public class BBox {
 	private double ymax; /// valor Ymax.
 	private GL gl;
 	
-	 /// Cria o ponto (0,0,0,1).
+
 	public BBox(GL gl) {
 		this.gl = gl;
 	}
 		
+	/**
+	 * Desenhar BBox
+	 * @param matrizObjeto
+	 */
 	public void desenhaBB(Transformacao4D matrizObjeto){		
 		
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
@@ -75,7 +79,12 @@ public class BBox {
 		this.ymax = ymax;
 	}
 	
-	/// Verifica se está dentro da bound box
+	/**
+	 *  Verifica se está dentro da bound box
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public boolean dentroDoBbox(double x, double y) {
 		/*System.out.println("dentro BB " + (x > xmin && x < xmax && y > ymin && y < ymax) + "\n"
 				+ "xmin " + xmin + "\n"
