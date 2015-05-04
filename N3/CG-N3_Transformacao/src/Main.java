@@ -247,7 +247,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 	public void mouseDragged(MouseEvent arg0) {
 		//Movimentar o vertice selecionado
+		
 		if(verticeSelecionado != null){
+			System.out.println("Entrou dragged");
 			verticeSelecionado.atribuirX(arg0.getX() - ORIGEM_X);
 			verticeSelecionado.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
 		}
@@ -302,8 +304,13 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 				System.out.println("setarbb");
 				objGrafico.setarBBox();
 			}
+			Ponto4D verticeAux;
 			for (ObjetoGrafico objetoGrafico : objetos) {
-				verticeSelecionado = objetoGrafico.selecionarPonto(ponto);
+				verticeAux = objetoGrafico.selecionarPonto(ponto);
+				//Quando encontrar o vertice de um objeto
+				if(verticeAux != null){
+					verticeSelecionado = verticeAux;
+				}
 			}
 		}
 		
