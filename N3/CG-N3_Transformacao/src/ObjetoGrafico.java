@@ -109,6 +109,9 @@ public class ObjetoGrafico {
 		
 	}
 	
+	/**
+	 * Atribui os valores da BBox do objeto
+	 */
 	public void setarBBox(){	
 		double minX = 1000;
 		double minY = 1000;
@@ -138,7 +141,12 @@ public class ObjetoGrafico {
 		bb.setarYmax(maxY);		
 	}
 
-	public boolean intersecao(double yI){
+	/**
+	 * Verifica se o ponto clicado esta dentro ou fora do objeto
+	 * @param yI
+	 * @return
+	 */
+	public boolean scanLine(double yI){
 		double ti = -1; 
 		
 		for (int i = 0; i < vertices.size() -1; i++) {	
@@ -222,7 +230,11 @@ public class ObjetoGrafico {
 //		System.out.println("anguloGlobal:" + anguloGlobal);
 	}
 	
-	//Marcar um ponto como selecionado
+	/**
+	 * Marcar um ponto como selecionado
+	 * @param Ponto4D pontoExterno
+	 * @return Ponto4D pontoSelecionado
+	 */
 	public Ponto4D selecionarPonto(Ponto4D pontoExterno){
 		Ponto4D retorno = null;
 		Ponto4D pontoObjTranformado;
@@ -254,7 +266,9 @@ public class ObjetoGrafico {
 		return retorno;
 	}
 	
-	//Remover o ponto selecionado do objeto grafico
+	/**
+	 *Remover o ponto selecionado do objeto grafico 
+	 */
 	public void deletarSelecionado(){
 		for (Ponto4D ponto4d : vertices) {
 			if(ponto4d.obterSelcionado() == true){
@@ -264,12 +278,21 @@ public class ObjetoGrafico {
 		}
 	}
 	
+	/**
+	 * Atriubuir uma cor RGB para o objeto
+	 * @param R
+	 * @param G
+	 * @param B
+	 */
 	public void atribuirCor(float R, float G, float B){
 		this.R = R;
 		this.G = G;
 		this.B = B;
 	}
-	
+	/**
+	 * Retorna a BBox do objeto
+	 * @return
+	 */
 	public BBox obterBBox(){
 		return this.bb;
 	}
