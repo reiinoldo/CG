@@ -7,6 +7,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -137,20 +138,31 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 		case KeyEvent.VK_PAGE_UP:
 			if(objGrafico != null){
-				objGrafico.escalaXYZ(2.0,2.0);
+				Ponto4D centroBBox = new Ponto4D();
+				centroBBox.atribuirX(objGrafico.obterBBox().obterXmax() - objGrafico.obterBBox().obterXmin());
+				centroBBox.atribuirY(objGrafico.obterBBox().obterYmax() - objGrafico.obterBBox().obterYmin());
+				objGrafico.escalaXYZPtoFixo(2.0,centroBBox);
 			}
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
 			if(objGrafico != null){
-				objGrafico.escalaXYZ(0.5,0.5);
+				Ponto4D centroBBox = new Ponto4D();
+				centroBBox.atribuirX(objGrafico.obterBBox().obterXmax() - objGrafico.obterBBox().obterXmin());
+				centroBBox.atribuirY(objGrafico.obterBBox().obterYmax() - objGrafico.obterBBox().obterYmin());
+				objGrafico.escalaXYZPtoFixo(0.5, centroBBox);
 			}
 			break;
 
-		/*case KeyEvent.VK_HOME:
-//			objetos[0].RoracaoZ();
+		case KeyEvent.VK_HOME:
+			if(objGrafico != null){
+				Ponto4D centroBBox = new Ponto4D();
+				centroBBox.atribuirX(objGrafico.obterBBox().obterXmax() - objGrafico.obterBBox().obterXmin());
+				centroBBox.atribuirY(objGrafico.obterBBox().obterYmax() - objGrafico.obterBBox().obterYmin());
+				objGrafico.rotacaoZPtoFixo(10f,centroBBox);
+			}
 			break;
 
-		case KeyEvent.VK_1:
+		/*case KeyEvent.VK_1:
 			objetos[0].escalaXYZPtoFixo(0.5, new Ponto4D(-15.0,-15.0,0.0,0.0));
 			break;
 			

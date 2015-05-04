@@ -219,5 +219,9 @@ public class ObjetoGrafico {
 		this.B = B;
 	}
 	
+	public BBox obterBBox(){
+		return this.bb;
+	}
+	
 }
 
