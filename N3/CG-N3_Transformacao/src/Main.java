@@ -28,9 +28,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private double atualX;
 	private double atualY;
 	private boolean desenharRastro;
-	private boolean desenharBB;
 	private float[] cor = new float[3];
 	private Ponto4D verticeSelecionado;
+	private double xClicado, yClicado;	
 	
 	// "render" feito logo apos a inicializacao do contexto OpenGL.
 	public void init(GLAutoDrawable drawable) {
@@ -70,12 +70,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenha();
-			if (desenharBB){
-				objetoGrafico.desenhaBBox();
-			}	
+			if (objetoGrafico.obterBB().dentroDoBbox(xClicado, yClicado)){
+				if (objetoGrafico.intersecao(yClicado))
+					objetoGrafico.obterBB().desenhaBB();				
+			}
 		}
-			
-		desenharBB = false;
 		
 		gl.glColor3f(1.0f, 1.0f, 0.0f);
 		gl.glLineWidth(2);
@@ -212,10 +211,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			}
 			verticeSelecionado = null;
 			break;
-			
-		case KeyEvent.VK_O:
-			desenharBB = true;
-			break;	
 		}
 
 		glDrawable.display();
@@ -262,6 +257,13 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 
 	public void mouseClicked(MouseEvent arg0) {	
 		// TODO Auto-generated method stub
+		xClicado = arg0.getX() - ORIGEM_X;
+		yClicado = (arg0.getY() - ORIGEM_Y) * -1;
+		
+		System.out.println("xClicado" + xClicado);
+		System.out.println("yClicado" + yClicado);
+		
+		glDrawable.display();
 	}
 
 	public void mouseEntered(MouseEvent arg0) {
@@ -289,6 +291,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			desenharRastro = true;
 		} else{
 			//Verificar se o clique foi sobre um ponto e marcar o mesmo como selecionado
+			if (objGrafico!=null){
+				System.out.println("setarbb");
+				objGrafico.setarBBox();
+			}
 			for (ObjetoGrafico objetoGrafico : objetos) {
 				verticeSelecionado = objetoGrafico.selecionarPonto(ponto);
 			}

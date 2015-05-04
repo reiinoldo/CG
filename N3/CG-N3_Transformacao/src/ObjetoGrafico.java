@@ -30,6 +30,10 @@ public class ObjetoGrafico {
 		this.bb = new BBox(gl);
 	}
 	
+	public BBox obterBB(){
+		return bb;
+	}
+	
 	public void addPonto4D(Ponto4D ponto){
 		this.vertices.add(ponto);
 	}
@@ -72,7 +76,7 @@ public class ObjetoGrafico {
 		
 	}
 	
-	public void desenhaBBox(){	
+	public void setarBBox(){	
 		double minX = 1000;
 		double minY = 1000;
 		double maxX = 0;
@@ -102,6 +106,21 @@ public class ObjetoGrafico {
 		bb.desenhaBB();
 	}
 
+	public boolean intersecao(double yI){
+		double ti = -1; 
+		
+		for (int i = 0; i < vertices.size() -1; i++) {	
+			if (vertices.get(i + 1)!=null){
+				ti = (yI - vertices.get(i).obterY()) / (vertices.get(i+1).obterY() - vertices.get(i).obterY());
+				if (ti >= 0 && ti <= 1)
+					return true;
+			}			
+		}	
+		
+		return false;		
+		
+	}
+	
 	public void translacaoXYZ(double tx, double ty, double tz) {
 		Transformacao4D matrizTranslate = new Transformacao4D();
 		matrizTranslate.atribuirTranslacao(tx,ty,tz);

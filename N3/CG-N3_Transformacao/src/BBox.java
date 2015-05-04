@@ -23,11 +23,6 @@ public class BBox {
 			gl.glVertex2d(xmax, ymin);
 			gl.glVertex2d(xmin, ymin);		
 			
-			System.out.println("xmin " + xmin);
-			System.out.println("xmax " + xmax);
-			System.out.println("ymin " + ymin);
-			System.out.println("ymax " + ymax);
-			
 		}
 		
 		gl.glEnd();
@@ -78,6 +73,11 @@ public class BBox {
 	
 	/// Verifica se está dentro da bound box
 	public boolean dentroDoBbox(double x, double y) {
+		/*System.out.println("dentro BB " + (x > xmin && x < xmax && y > ymin && y < ymax) + "\n"
+				+ "xmin " + xmin + "\n"
+				+ "xmax " + xmax + "\n"
+				+ "ymin " + ymin + "\n"
+				+ "ymax " + ymax + "\n");*/
 		return x > xmin && x < xmax && y > ymin && y < ymax;
 	}	
 
