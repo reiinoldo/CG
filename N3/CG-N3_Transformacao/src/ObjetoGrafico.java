@@ -236,7 +236,7 @@ public class ObjetoGrafico {
 			pontoObjTranformado.atribuirY(pontoObjeto.obterY());
 			pontoObjTranformado.atribuirZ(pontoObjeto.obterZ());
 			pontoObjTranformado = matrizObjeto.transformPoint(pontoObjTranformado);
-			
+			//Alterar X e Y do ponto para ser compativel com a transformacao do objeto
 			if((pontoObjTranformado.obterX() <= pontoExterno.obterX() + 5 &&
 				pontoObjTranformado.obterX() >= pontoExterno.obterX() - 5) &&
 					
