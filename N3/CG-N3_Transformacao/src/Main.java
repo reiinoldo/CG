@@ -139,16 +139,16 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_PAGE_UP:
 			if(objGrafico != null){
 				Ponto4D centroBBox = new Ponto4D();
-				centroBBox.atribuirX(objGrafico.obterBBox().obterXmax() - objGrafico.obterBBox().obterXmin());
-				centroBBox.atribuirY(objGrafico.obterBBox().obterYmax() - objGrafico.obterBBox().obterYmin());
+				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
+				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
 				objGrafico.escalaXYZPtoFixo(2.0,centroBBox);
 			}
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
 			if(objGrafico != null){
 				Ponto4D centroBBox = new Ponto4D();
-				centroBBox.atribuirX(objGrafico.obterBBox().obterXmax() - objGrafico.obterBBox().obterXmin());
-				centroBBox.atribuirY(objGrafico.obterBBox().obterYmax() - objGrafico.obterBBox().obterYmin());
+				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
+				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
 				objGrafico.escalaXYZPtoFixo(0.5, centroBBox);
 			}
 			break;
@@ -156,8 +156,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_HOME:
 			if(objGrafico != null){
 				Ponto4D centroBBox = new Ponto4D();
-				centroBBox.atribuirX(objGrafico.obterBBox().obterXmax() - objGrafico.obterBBox().obterXmin());
-				centroBBox.atribuirY(objGrafico.obterBBox().obterYmax() - objGrafico.obterBBox().obterYmin());
+				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
+				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
 				objGrafico.rotacaoZPtoFixo(10f,centroBBox);
 			}
 			break;
