@@ -135,14 +135,18 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			}
 			break;
 
-		/*case KeyEvent.VK_PAGE_UP:
-			objetos[0].escalaXYZ(2.0,2.0);
+		case KeyEvent.VK_PAGE_UP:
+			if(objGrafico != null){
+				objGrafico.escalaXYZ(2.0,2.0);
+			}
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
-			objetos[0].escalaXYZ(0.5,0.5);
+			if(objGrafico != null){
+				objGrafico.escalaXYZ(0.5,0.5);
+			}
 			break;
 
-		case KeyEvent.VK_HOME:
+		/*case KeyEvent.VK_HOME:
 //			objetos[0].RoracaoZ();
 			break;
 
@@ -271,14 +275,14 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			ultimoX = ponto.obterX();
 			ultimoY = ponto.obterY();
 			desenharRastro = true;
-			
-			glDrawable.display();
 		} else{
 			//Verificar se o clique foi sobre um ponto e marcar o mesmo como selecionado
 			for (ObjetoGrafico objetoGrafico : objetos) {
 				verticeSelecionado = objetoGrafico.selecionarPonto(ponto);
 			}
 		}
+		
+		glDrawable.display();
 	}
 
 	public void mouseReleased(MouseEvent arg0) {
