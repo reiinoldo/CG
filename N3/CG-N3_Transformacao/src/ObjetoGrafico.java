@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import javax.media.opengl.GL;
 public class ObjetoGrafico {
 	GL gl;
-	BBox bb;
+	private BBox bb;
 	private float tamanho;
 	private float R;
 	private float G;
@@ -30,6 +30,10 @@ public class ObjetoGrafico {
 		this.gl = gl;
 		this.bb = new BBox(gl);
 		this.filhos = new ArrayList<ObjetoGrafico>();
+	}
+	
+	public Transformacao4D obterT4D(){
+		return this.matrizObjeto;
 	}
 	
 	public void setFilho(ObjetoGrafico filho){
@@ -131,8 +135,7 @@ public class ObjetoGrafico {
 		bb.setarXmin(minX);
 		bb.setarYmin(minY);
 		bb.setarXmax(maxX);
-		bb.setarYmax(maxY);
-		bb.desenhaBB();
+		bb.setarYmax(maxY);		
 	}
 
 	public boolean intersecao(double yI){

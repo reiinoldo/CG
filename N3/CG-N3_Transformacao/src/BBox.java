@@ -13,9 +13,12 @@ public class BBox {
 		this.gl = gl;
 	}
 		
-	public void desenhaBB(){
+	public void desenhaBB(Transformacao4D matrizObjeto){		
+		
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		gl.glLineWidth(1f);
+		gl.glPushMatrix();
+		gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
 		gl.glBegin(GL.GL_LINE_LOOP);
 		{
 			gl.glVertex2d(xmin, ymax);
@@ -27,7 +30,8 @@ public class BBox {
 		
 		gl.glEnd();
 
-		gl.glFlush();			
+		gl.glFlush();
+		gl.glPopMatrix();
 	}
 	
 	/// Obter valor X minimo.
