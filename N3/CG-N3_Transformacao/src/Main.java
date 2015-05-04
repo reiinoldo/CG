@@ -73,7 +73,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenha();
 			if (objetoGrafico.obterBB().dentroDoBbox(xClicado, yClicado)){
-				if (objetoGrafico.intersecao(yClicado))
+				if (objetoGrafico.scanLine(yClicado))
 					objetoGrafico.obterBB().desenhaBB(objetoGrafico.obterT4D());
 					objGrafico = objetoGrafico;
 			}
