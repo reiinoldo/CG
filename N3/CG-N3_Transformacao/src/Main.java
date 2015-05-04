@@ -31,6 +31,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private float[] cor = new float[3];
 	private Ponto4D verticeSelecionado;
 	private double xClicado, yClicado;	
+	private ObjetoGrafico objPai;
+	private boolean inserirFilhos = false;
 	
 	// "render" feito logo apos a inicializacao do contexto OpenGL.
 	public void init(GLAutoDrawable drawable) {
@@ -212,6 +214,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			}
 			verticeSelecionado = null;
 			break;
+			//Ao apertar insert adicionará filhos ao polígono, e ao apertar novamente não fará relação ao poligono selecionado
+		case KeyEvent.VK_INSERT:
+			inserirFilhos = !inserirFilhos;			
+			break;	
 		}
 
 		glDrawable.display();
@@ -311,8 +317,12 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private void desenharPoligono(int primitiva, char tecla){
 		if(criandoObjeto == false){
 			//Iniciando criacao do poligono
+			if(inserirFilhos)
+				objPai = objGrafico; 
 			objGrafico = new ObjetoGrafico(primitiva, gl);
 			objetos.add(objGrafico);
+			if(inserirFilhos)
+				objPai.setFilho(objGrafico);
 			criandoObjeto = true;
 			ultimaTecla = tecla;
 		} else if(ultimaTecla == tecla){

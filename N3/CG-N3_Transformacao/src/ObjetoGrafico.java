@@ -11,6 +11,7 @@ public class ObjetoGrafico {
 
 	private int primitiva; 
 	private ArrayList<Ponto4D> vertices; 
+	private ArrayList<ObjetoGrafico> filhos;
 
 	private Transformacao4D matrizObjeto = new Transformacao4D();
 
@@ -28,6 +29,15 @@ public class ObjetoGrafico {
 		this.tamanho = 2.0f;
 		this.gl = gl;
 		this.bb = new BBox(gl);
+		this.filhos = new ArrayList<ObjetoGrafico>();
+	}
+	
+	public void setFilho(ObjetoGrafico filho){
+		this.filhos.add(filho);
+	}
+	
+	public boolean temFilho(){
+		return filhos.size() > 0;
 	}
 	
 	public BBox obterBB(){
@@ -57,6 +67,8 @@ public class ObjetoGrafico {
 	public void desenha() {
 		gl.glLineWidth(tamanho);
 		gl.glPointSize(tamanho);
+		
+		double pontoX = 0, pontoY = 0;
 
 		gl.glPushMatrix();
 			gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
@@ -66,11 +78,28 @@ public class ObjetoGrafico {
 			    	if(ponto4D.obterSelcionado() == true){
 			    		gl.glColor3f(1.0f,1.0f,0.0f);
 			    	}
-			    	gl.glVertex2d(ponto4D.obterX(), ponto4D.obterY());
+			    	pontoX = ponto4D.obterX();
+			    	pontoY = ponto4D.obterY();
+			    	gl.glVertex2d(pontoX, pontoY);
+			    	
 				}
 			gl.glEnd();
 
 			//////////// ATENCAO: chamar desenho dos filhos... 
+			
+			if (temFilho()){
+				for (ObjetoGrafico objetoGrafico : filhos) {
+					gl.glBegin(primitiva);
+				    for (Ponto4D ponto4D : objetoGrafico.vertices) {
+						gl.glColor3f(R,G,B);
+				    	if(ponto4D.obterSelcionado() == true){
+				    		gl.glColor3f(1.0f,1.0f,0.0f);
+				    	}
+				    	gl.glVertex2d(pontoX - ponto4D.obterX(), pontoY - ponto4D.obterY());
+					}
+				    gl.glEnd();
+				}
+			}
 
 		gl.glPopMatrix();		
 		
