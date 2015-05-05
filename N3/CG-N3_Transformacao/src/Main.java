@@ -72,11 +72,14 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenha();
+			
+			//Bbox
 			if (objetoGrafico.obterBB().dentroDoBbox(xClicado, yClicado)){
 				if (objetoGrafico.scanLine(yClicado))
 					objetoGrafico.obterBB().desenhaBB(objetoGrafico.obterT4D());
 					objGrafico = objetoGrafico;
 			}
+			
 		}
 		
 		gl.glColor3f(1.0f, 1.0f, 0.0f);
@@ -122,21 +125,25 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_RIGHT:
 			if(objGrafico != null){
 				objGrafico.translacaoXYZ(2.0,0.0,0.0);
+				objGrafico.podeDesenharFilho = true;
 			}
 			break;
 		case KeyEvent.VK_LEFT:
 			if(objGrafico != null){
 				objGrafico.translacaoXYZ(-2.0,0.0,0.0);
+				objGrafico.podeDesenharFilho = true;
 			}
 			break;
 		case KeyEvent.VK_UP:
 			if(objGrafico != null){
 				objGrafico.translacaoXYZ(0.0,2.0,0.0);
+				objGrafico.podeDesenharFilho = true;
 			}
 			break;
 		case KeyEvent.VK_DOWN:
 			if(objGrafico != null){
 				objGrafico.translacaoXYZ(0.0,-2.0,0.0);
+				objGrafico.podeDesenharFilho = true;
 			}
 			break;
 
@@ -146,6 +153,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
 				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
 				objGrafico.escalaXYZPtoFixo(2.0,centroBBox);
+				objGrafico.podeDesenharFilho = true;
 			}
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
@@ -154,6 +162,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
 				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
 				objGrafico.escalaXYZPtoFixo(0.5, centroBBox);
+				objGrafico.podeDesenharFilho = true;
 			}
 			break;
 
@@ -223,6 +232,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		}
 
 		glDrawable.display();
+		objGrafico.podeDesenharFilho = false;
 	}
 
 	// metodo definido na interface GLEventListener.
@@ -336,12 +346,15 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private void desenharPoligono(int primitiva, char tecla){
 		if(criandoObjeto == false){
 			//Iniciando criacao do poligono
-			if(inserirFilhos)
-				objPai = objGrafico; 
-			objGrafico = new ObjetoGrafico(primitiva, gl);
-			objetos.add(objGrafico);
-			if(inserirFilhos)
+			if(inserirFilhos){
+				objPai = objGrafico;
+				objGrafico = new ObjetoGrafico(primitiva, gl);
 				objPai.setFilho(objGrafico);
+			}else{
+				objGrafico = new ObjetoGrafico(primitiva, gl);
+				objetos.add(objGrafico);
+			}
+			
 			criandoObjeto = true;
 			ultimaTecla = tecla;
 		} else if(ultimaTecla == tecla){

@@ -23,6 +23,8 @@ public class ObjetoGrafico {
 	private static Transformacao4D matrizGlobal = new Transformacao4D();
 //	private double anguloGlobal = 0.0;
 	
+	boolean podeDesenharFilho = false;
+	
 	public ObjetoGrafico(int primitiva, GL gl) {
 		this.primitiva = primitiva;
 		this.vertices = new ArrayList<Ponto4D>();
@@ -147,17 +149,41 @@ public class ObjetoGrafico {
 	 * @return
 	 */
 	public boolean scanLine(double yI){
-		double ti = -1; 
+		double ti = -1;
+		int count = 0;
 		
 		for (int i = 0; i < vertices.size() -1; i++) {	
-			if (vertices.get(i + 1)!=null){
+			if (vertices.get(i + 1)!=null){				
 				ti = (yI - vertices.get(i).obterY()) / (vertices.get(i+1).obterY() - vertices.get(i).obterY());
-				if (ti >= 0 && ti <= 1)
-					return true;
-			}			
+				if ((ti) >= 0 && (ti) <= 1){					
+					count ++;
+				}
+				System.out.println("Scan line vertice " + i + "\n" + 
+						"ti " + ti + " \n" +
+					    "yI " + yI + " \n" +
+					    "y1 " + vertices.get(i).obterY() + " \n" +
+					    "y2 " + vertices.get(i+1).obterY() + " \n" 
+					    );
+			}
+			
+			
 		}	
 		
-		return false;		
+		ti = (yI - vertices.get(vertices.size() -1).obterY()) / (vertices.get(0).obterY() - vertices.get(vertices.size() -1).obterY());
+		if ((ti) >= 0 && (ti) <= 1){					
+			count ++;
+
+		}
+
+		System.out.println("Scan line vertice 3 \n" + 
+				"ti " + ti + " \n" +
+			    "yI " + yI + " \n" +
+			    "y1 " + vertices.get(vertices.size() -1).obterY() + " \n" +
+			    "y2 " + vertices.get(0).obterY() + " \n" 
+			    );
+		
+		System.out.print("contador " + count);
+		return ((count % 2) != 0);		
 		
 	}
 	
