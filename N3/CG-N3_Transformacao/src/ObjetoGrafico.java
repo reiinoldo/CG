@@ -76,7 +76,7 @@ public class ObjetoGrafico {
 		
 		double pontoX = 0, pontoY = 0;
 
-		gl.glPushMatrix();
+		gl.glPushMatrix();	
 			gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
 			gl.glBegin(primitiva);
 			    for (Ponto4D ponto4D : vertices) {
@@ -117,8 +117,8 @@ public class ObjetoGrafico {
 	public void setarBBox(){	
 		double minX = 1000;
 		double minY = 1000;
-		double maxX = 0;
-		double maxY = 0;
+		double maxX = -1000;
+		double maxY = -1000;
 		System.out.println("desenhaBBox");
 								
 		for (Ponto4D ponto4d : vertices) {
@@ -145,48 +145,56 @@ public class ObjetoGrafico {
 
 	/**
 	 * Verifica se o ponto clicado esta dentro ou fora do objeto
-	 * @param yI
-	 * @return
-	 */
-	public boolean scanLine(double yI){
-		double ti = -1;
-		int count = 0;
+	 * @param yI valor de y clicado
+	 * @param xI valor de x clicado
+	 * @return true se dentro
+	 */	
+	public boolean pontoEmPoligono(double yI, double xI){
+		int nInt = 0;
+		int nVertices = vertices.size();
 		
-		for (int i = 0; i < vertices.size() -1; i++) {	
-			if (vertices.get(i + 1)!=null){				
-				ti = (yI - vertices.get(i).obterY()) / (vertices.get(i+1).obterY() - vertices.get(i).obterY());
-				if ((ti) >= 0 && (ti) <= 1){					
-					count ++;
+		for (int iA = 0; iA < nVertices; iA++){
+			int iB = (iA + 1) % nVertices;
+			
+			Ponto4D pA = vertices.get(iA);
+			Ponto4D pB = vertices.get(iB);
+			
+			if (pA.obterY() != pB.obterY())	{
+				Ponto4D pInt = pontoDeInterseccao(pA, pB, yI); 
+				if (pInt != null){
+					if (pInt.obterX() >= xI && 
+						pInt.obterY() >= Math.min(pA.obterY(), pB.obterY()) && 
+						pInt.obterY() <= Math.max(pA.obterY(), pB.obterY()))
+					{
+						nInt += 1;
+					}
 				}
-				System.out.println("Scan line vertice " + i + "\n" + 
-						"ti " + ti + " \n" +
-					    "yI " + yI + " \n" +
-					    "y1 " + vertices.get(i).obterY() + " \n" +
-					    "y2 " + vertices.get(i+1).obterY() + " \n" 
-					    );
 			}
-			
-			
-		}	
-		
-		ti = (yI - vertices.get(vertices.size() -1).obterY()) / (vertices.get(0).obterY() - vertices.get(vertices.size() -1).obterY());
-		if ((ti) >= 0 && (ti) <= 1){					
-			count ++;
-
 		}
-
-		System.out.println("Scan line vertice 3 \n" + 
-				"ti " + ti + " \n" +
-			    "yI " + yI + " \n" +
-			    "y1 " + vertices.get(vertices.size() -1).obterY() + " \n" +
-			    "y2 " + vertices.get(0).obterY() + " \n" 
-			    );
 		
-		System.out.print("contador " + count);
-		return ((count % 2) != 0);		
-		
+		return !((nInt % 2) == 0);
 	}
 	
+	/**
+	 * Verifica o ponto de intersecção  
+	 * @param p1
+	 * @param p2
+	 * @param y 
+	 * @return O ponto da intersecção caso exista
+	 */
+	public Ponto4D pontoDeInterseccao(Ponto4D p1, Ponto4D p2, double y){		
+		double ti = (y - p1.obterY()) / (p2.obterY() - p1.obterY());
+		
+		if (ti >= 0.0 && ti <= 1.0){
+			double x = p1.obterX() + ((p2.obterX() - p1.obterX()) * ti);
+			
+			return new Ponto4D(x, y, 0, 1);
+		}
+				
+		return null;
+	}
+	
+		
 	public void translacaoXYZ(double tx, double ty, double tz) {
 		Transformacao4D matrizTranslate = new Transformacao4D();
 		matrizTranslate.atribuirTranslacao(tx,ty,tz);
@@ -302,6 +310,13 @@ public class ObjetoGrafico {
 				return;
 			}
 		}
+	}
+	
+	/**
+	 * Deleta o objeto selecionado
+	 */
+	public void deletarObjeto(){
+		vertices.clear();
 	}
 	
 	/**
