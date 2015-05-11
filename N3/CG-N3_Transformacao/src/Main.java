@@ -75,7 +75,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			
 			//Bbox
 			if (objetoGrafico.obterBB().dentroDoBbox(xClicado, yClicado)){
-				if (objetoGrafico.scanLine(yClicado))
+				if (objetoGrafico.pontoEmPoligono(yClicado, xClicado))
 					objetoGrafico.obterBB().desenhaBB(objetoGrafico.obterT4D());
 					objGrafico = objetoGrafico;
 			}
@@ -229,6 +229,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_INSERT:
 			inserirFilhos = !inserirFilhos;			
 			break;	
+		case KeyEvent.VK_DELETE:
+			if (objGrafico != null) // ta meio fail
+				objGrafico.deletarObjeto();			
+			break;			
 		}
 
 		glDrawable.display();
