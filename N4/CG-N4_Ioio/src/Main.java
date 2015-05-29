@@ -7,9 +7,6 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
-
-import com.sun.opengl.util.GLUT;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -19,7 +16,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-	private GLUT glut;
 	
 	private ArrayList<ObjetoGrafico> objetos = new ArrayList<ObjetoGrafico>();
 	private ObjetoGrafico objGrafico;
@@ -43,10 +39,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glDrawable = drawable;
 		gl = drawable.getGL();
 		glu = new GLU();
-		glut = new GLUT();
 		glDrawable.setGL(new DebugGL(gl));
-		//gl.glEnable(GL.GL_DEPTH_TEST);
-		//gl.glEnable(GL.GL_CULL_FACE);
+
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		criandoObjeto = false;
 		
@@ -69,15 +63,12 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glLoadIdentity();
 
 		// configurar window
-		//glu.gluOrtho2D(-240.0f, 240.0f, -230.0f, 230.0f);
-		glu.gluPerspective(45, 1, 1, 1000);
-		glu.gluLookAt(0, 0, -800, 0, 0, 0, 0, 1, 0);
+		glu.gluOrtho2D(-240.0f, 240.0f, -230.0f, 230.0f);
 
 		gl.glLineWidth(1.0f);
 		gl.glPointSize(1.0f);
 
-		//desenhaSRU();
-		desenhaIoio();
+		desenhaSRU();
 		
 		for (ObjetoGrafico objetoGrafico : objetos) {
 			objetoGrafico.desenha();
@@ -114,36 +105,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			gl.glVertex2f(  0.0f, -115.0f);
 			gl.glVertex2f(  0.0f, 115.0f );
 		gl.glEnd();
-	}
-	
-	public void desenhaIoio(){
-		
-		gl.glPushMatrix();
-		gl.glColor3f(0.0f, 1.0f, 0.0f);
-		gl.glTranslatef(0, 180.0f, 0);
-		glut.glutSolidCube(100);
-		gl.glPopMatrix();
-		
-		gl.glColor3f(0.0f, 0.0f, 0.0f);
-		gl.glLineWidth(1.0f);
-		gl.glBegin( GL.GL_LINES );
-			gl.glVertex3f( -10.0f, 160.0f, 0.0f );
-			gl.glVertex3f( -10.0f, 130.0f, 0.0f );
-		gl.glEnd();
-		
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		
-		glut.glutSolidSphere(10.0f, 20, 20);
-        
-        /*GLUquadric earth = glu.gluNewQuadric();
-        glu.gluQuadricDrawStyle(earth, GLU.GLU_FILL);
-        glu.gluQuadricNormals(earth, GLU.GLU_FLAT);
-        glu.gluQuadricOrientation(earth, GLU.GLU_OUTSIDE);
-        final float radius = 60.0f;
-        final int slices = 16;
-        final int stacks = 16;
-        glu.gluSphere(earth, radius, 160, 16);
-        glu.gluDeleteQuadric(earth);*/
 	}
 	
 	/** Dependendo da tecla pressionada fará as alterações nos objetos desenhados **/
