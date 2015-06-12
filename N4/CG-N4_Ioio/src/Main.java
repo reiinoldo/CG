@@ -23,6 +23,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	
 	private ArrayList<ObjetoGrafico> objetos = new ArrayList<ObjetoGrafico>();
 	private ObjetoGrafico objGrafico;
+	//private Ob
 	boolean criandoObjeto;
 	char ultimaTecla;
 	private static final int ORIGEM_X = 240;
@@ -37,6 +38,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private double xClicado, yClicado;	
 	private ObjetoGrafico objPai;
 	private boolean inserirFilhos = false;
+	private Esfera ioio;
+	private Cubo cubo;
 	
 	/** "render" feito logo apos a inicializacao do contexto OpenGL. **/
 	public void init(GLAutoDrawable drawable) {
@@ -58,6 +61,15 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		for (int i = 0; i < cor.length; i++) {
 			cor[i] = 0.0f;
 		}
+		ioio = new Esfera(50, 20, 20);
+		ioio.atribuirGL(gl);
+		
+		cubo = new Cubo(100);
+		cubo.atribuirGL(gl);
+		cubo.translacaoXYZ(0, 180, 0);
+		cubo.setR(0);
+		cubo.setG(0);
+		cubo.setB(0);
 //		objeto.atribuirGL(gl);
 	}
 
@@ -118,32 +130,26 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	
 	public void desenhaIoio(){
 		
-		gl.glPushMatrix();
+		/*gl.glPushMatrix();
 		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		gl.glTranslatef(0, 180.0f, 0);
 		glut.glutSolidCube(100);
-		gl.glPopMatrix();
+		gl.glPopMatrix();*/
+		
+		cubo.desenha();
 		
 		gl.glColor3f(0.0f, 0.0f, 0.0f);
 		gl.glLineWidth(1.0f);
 		gl.glBegin( GL.GL_LINES );
-			gl.glVertex3f( -10.0f, 160.0f, 0.0f );
-			gl.glVertex3f( -10.0f, 130.0f, 0.0f );
+			gl.glVertex3f( -5.0f, 120.0f, -50.0f );
+			gl.glVertex3f( -5.0f, 0.0f, -50.0f );
 		gl.glEnd();
 		
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 		
-		glut.glutSolidSphere(10.0f, 20, 20);
-        
-        /*GLUquadric earth = glu.gluNewQuadric();
-        glu.gluQuadricDrawStyle(earth, GLU.GLU_FILL);
-        glu.gluQuadricNormals(earth, GLU.GLU_FLAT);
-        glu.gluQuadricOrientation(earth, GLU.GLU_OUTSIDE);
-        final float radius = 60.0f;
-        final int slices = 16;
-        final int stacks = 16;
-        glu.gluSphere(earth, radius, 160, 16);
-        glu.gluDeleteQuadric(earth);*/
+		ioio.desenha();
+		
+		/*glut.glutSolidSphere(50.0f, 20, 20);*/
 	}
 	
 	/** Dependendo da tecla pressionada fará as alterações nos objetos desenhados **/
@@ -160,8 +166,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_R:
 			objetos[0].atribuirIdentidade();
 			break;*/
+		
+		case KeyEvent.VK_SPACE:
+			break;
 
-		case KeyEvent.VK_RIGHT:
+		/*case KeyEvent.VK_RIGHT:
 			if(objGrafico != null){
 				objGrafico.translacaoXYZ(2.0,0.0,0.0);
 				objGrafico.podeDesenharFilho = true;
@@ -212,7 +221,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
 				objGrafico.rotacaoZPtoFixo(10f,centroBBox);
 			}
-			break;
+			break;*/
 
 		/*case KeyEvent.VK_1:
 			objetos[0].escalaXYZPtoFixo(0.5, new Ponto4D(-15.0,-15.0,0.0,0.0));
@@ -226,7 +235,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			objetos[0].rotacaoZPtoFixo(10.0, new Ponto4D(-15.0,-15.0,0.0,0.0));
 			break;*/
 			//Desenhar poligno aberto
-		case KeyEvent.VK_A:
+		/*case KeyEvent.VK_A:
 			desenharPoligono(GL.GL_LINE_STRIP,'a');
 			break;
 			//Desenhar poligono fechado
@@ -271,7 +280,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		case KeyEvent.VK_DELETE:
 			if (objGrafico != null) // ta meio fail
 				objGrafico.deletarObjeto();			
-			break;			
+			break;*/			
 		}
 
 		glDrawable.display();
