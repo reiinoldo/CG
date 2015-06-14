@@ -12,7 +12,7 @@ public class Frame extends JFrame{
 	
 	public Frame() {		
 		// Cria o frame.
-		super("CG-N3_Trasnformacao");   
+		super("CG-N4_Ioio");   
 		setBounds(50,100,500,500); 
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());

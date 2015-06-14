@@ -1,13 +1,12 @@
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 
 import javax.media.opengl.DebugGL;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
 
 import com.sun.opengl.util.GLUT;
 
@@ -19,27 +18,15 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-	private GLUT glut;
-	
-	private ArrayList<ObjetoGrafico> objetos = new ArrayList<ObjetoGrafico>();
+	private GLUT glut;	
 	private ObjetoGrafico objGrafico;
-	//private Ob
 	boolean criandoObjeto;
 	char ultimaTecla;
-	private static final int ORIGEM_X = 240;
-	private static final int ORIGEM_Y = 230;
-	private double ultimoX;
-	private double ultimoY;
-	private double atualX;
-	private double atualY;
-	private boolean desenharRastro;
-	private float[] cor = new float[3];
-	private Ponto4D verticeSelecionado;
-	private double xClicado, yClicado;	
-	private ObjetoGrafico objPai;
-	private boolean inserirFilhos = false;
 	private Esfera ioio;
 	private Cubo cubo;
+	
+	private float view_rotx = 0.0f, view_roty = 0.0f, view_rotz = 0.0f;
+	private int prevMouseX, prevMouseY;
 	
 	/** "render" feito logo apos a inicializacao do contexto OpenGL. **/
 	public void init(GLAutoDrawable drawable) {
@@ -51,18 +38,20 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		//gl.glEnable(GL.GL_DEPTH_TEST);
 		//gl.glEnable(GL.GL_CULL_FACE);
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		criandoObjeto = false;
+		//gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		
-		for (ObjetoGrafico objetoGrafico : objetos) {			
-			objetoGrafico.atribuirGL(gl);			
-		}
+		float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
 		
-		
-		for (int i = 0; i < cor.length; i++) {
-			cor[i] = 0.0f;
-		}
-		ioio = new Esfera(50, 20, 20);
-		ioio.atribuirGL(gl);
+	    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
+	    //gl.glEnable(GL.GL_CULL_FACE);
+	    gl.glEnable(GL.GL_LIGHTING);
+	    gl.glEnable(GL.GL_LIGHT0);
+	    gl.glEnable(GL.GL_DEPTH_TEST);
+	    
+		ioio = new Esfera(1f, 4f, 1f, 1f, gl);
+		gl.glEnable(GL.GL_NORMALIZE);
+		//ioio.atribuirGL(gl);
 		
 		cubo = new Cubo(100);
 		cubo.atribuirGL(gl);
@@ -77,37 +66,25 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	     "render" feito pelo cliente OpenGL. **/	     
 	public void display(GLAutoDrawable arg0) {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 
 		// configurar window
 		//glu.gluOrtho2D(-240.0f, 240.0f, -230.0f, 230.0f);
 		glu.gluPerspective(45, 1, 1, 1000);
-		glu.gluLookAt(0, 0, -800, 0, 0, 0, 0, 1, 0);
-
-		gl.glLineWidth(1.0f);
-		gl.glPointSize(1.0f);
+		glu.gluLookAt(0, 0, -50, 0, 0, 0, 0, 1, 0);
 
 		//desenhaSRU();
-		desenhaIoio();
+		//rotacionando os objetos da cena
+	    gl.glPushMatrix();
+	    gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
+	    gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
+	    gl.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
+	    
+		desenhaIoio();	
 		
-		for (ObjetoGrafico objetoGrafico : objetos) {
-			objetoGrafico.desenha();
-			
-			//Bbox
-			if (objetoGrafico.obterBB().dentroDoBbox(xClicado, yClicado)){
-				if (objetoGrafico.pontoEmPoligono(yClicado, xClicado))
-					objetoGrafico.obterBB().desenhaBB(objetoGrafico.obterT4D());
-					objGrafico = objetoGrafico;
-			}
-			
-		}
-		
-		gl.glColor3f(1.0f, 1.0f, 0.0f);
-		gl.glLineWidth(2);
-		gl.glPointSize(2);		
-		desenhaRastro();
-		
+		gl.glPopMatrix();
 		gl.glFlush();
 	}
 
@@ -128,28 +105,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glEnd();
 	}
 	
-	public void desenhaIoio(){
-		
-		/*gl.glPushMatrix();
-		gl.glColor3f(0.0f, 1.0f, 0.0f);
-		gl.glTranslatef(0, 180.0f, 0);
-		glut.glutSolidCube(100);
-		gl.glPopMatrix();*/
-		
-		cubo.desenha();
-		
-		gl.glColor3f(0.0f, 0.0f, 0.0f);
-		gl.glLineWidth(1.0f);
-		gl.glBegin( GL.GL_LINES );
-			gl.glVertex3f( -5.0f, 120.0f, -50.0f );
-			gl.glVertex3f( -5.0f, 0.0f, -50.0f );
-		gl.glEnd();
-		
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		
+	public void desenhaIoio(){		
 		ioio.desenha();
-		
-		/*glut.glutSolidSphere(50.0f, 20, 20);*/
 	}
 	
 	/** Dependendo da tecla pressionada fará as alterações nos objetos desenhados **/
@@ -309,36 +266,27 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		// System.out.println(" --- keyTyped ---");
 	}
 
-	/**
-	 * Movimentar o vertice selecionado
-	 */
-	public void mouseDragged(MouseEvent arg0) {		
-		
-		if(verticeSelecionado != null){
-			System.out.println("Entrou dragged");
-			verticeSelecionado.atribuirX(arg0.getX() - ORIGEM_X);
-			verticeSelecionado.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
-		}
-		glDrawable.display();
+	public void mouseDragged(MouseEvent e) {		
+	    int x = e.getX();
+	    int y = e.getY();
+	    Dimension size = e.getComponent().getSize();
+
+	    float thetaY = 360.0f * ( (float)(x-prevMouseX)/(float)size.width);
+	    float thetaX = 360.0f * ( (float)(prevMouseY-y)/(float)size.height);
+	    
+	    prevMouseX = x;
+	    prevMouseY = y;
+
+	    view_rotx += thetaX;
+	    view_roty += thetaY;
+	    
+	    glDrawable.display();
 	}
 
-	/**
-	 * Salvar posicao atual do mouse para poder desenhar o rastro
-	 */
 	public void mouseMoved(MouseEvent arg0) {		
-		atualX = arg0.getX() - ORIGEM_X;
-		atualY = (arg0.getY() - ORIGEM_Y) * -1;
-		if(glDrawable != null)
-			glDrawable.display();
 	}
 
-	/**
-	 * Usado para receber o ponto de onde foi clicado para selecionar o objeto
-	 */
 	public void mouseClicked(MouseEvent arg0) {		
-		xClicado = arg0.getX() - ORIGEM_X;
-		yClicado = (arg0.getY() - ORIGEM_Y) * -1;		
-		glDrawable.display();
 	}
 
 	public void mouseEntered(MouseEvent arg0) {
@@ -351,80 +299,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 	}
 
-	/**
-	 * Adicionar ou selecionar pontos do objeto
-	 */
 	public void mousePressed(MouseEvent arg0) {
-		Ponto4D ponto = new Ponto4D();
-		ponto.atribuirX(arg0.getX() - ORIGEM_X);
-		ponto.atribuirY((arg0.getY() - ORIGEM_Y) * -1);
-		ponto.atribuirZ(0);
-				
-		if(criandoObjeto == true){		
-			//Adicionando pontos ao poligono que esta sendo criado
-			objGrafico.addPonto4D(ponto);
-			//Salvando posicao do ultimo ponto adicionado para poder desenhar o rastro
-			ultimoX = ponto.obterX();
-			ultimoY = ponto.obterY();
-			desenharRastro = true;
-		} else{
-			//Verificar se o clique foi sobre um ponto e marcar o mesmo como selecionado
-			if (objGrafico!=null){
-				System.out.println("setarbb");
-				objGrafico.setarBBox();
-			}
-			Ponto4D verticeAux;
-			for (ObjetoGrafico objetoGrafico : objetos) {
-				verticeAux = objetoGrafico.selecionarPonto(ponto);
-				//Quando encontrar o vertice de um objeto
-				if(verticeAux != null){
-					verticeSelecionado = verticeAux;
-				}
-			}
-		}
-		
-		glDrawable.display();
 	}
 
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub		
-	}
-	
-	/**
-	 * Cria o poligono se for convexo ou concavo
-	 * @param primitiva
-	 * @param tecla
-	 */
-	private void desenharPoligono(int primitiva, char tecla){
-		if(criandoObjeto == false){
-			//Iniciando criacao do poligono
-			if(inserirFilhos){
-				objPai = objGrafico;
-				objGrafico = new ObjetoGrafico(primitiva, gl);
-				objPai.setFilho(objGrafico);
-			}else{
-				objGrafico = new ObjetoGrafico(primitiva, gl);
-				objetos.add(objGrafico);
-			}
-			
-			criandoObjeto = true;
-			ultimaTecla = tecla;
-		} else if(ultimaTecla == tecla){
-			//Encerrando criacao poligono
-			criandoObjeto = false;
-			desenharRastro = false;
-		}	
-	}
-	
-	/**
-	 * Desenha o rastro durante a inserção dos pontos
-	 */
-	private void desenhaRastro() {
-		if(desenharRastro == true){			
-			gl.glBegin(GL.GL_LINES);
-				gl.glVertex2d(ultimoX, ultimoY);
-				gl.glVertex2d(atualX, atualY);
-			gl.glEnd();
-		}
-	}
+	}	
 }
