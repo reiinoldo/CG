@@ -1,14 +1,14 @@
 import javax.media.opengl.GL;
 
 
-public class Esfera extends ObjetoSolido{
+public class Ioio extends ObjetoSolido{
 	
 	private float raioInterno;
 	private float raioExterno;
 	private float comprimento;
 	private float profundidade; 
 	
-	public Esfera(float raioInterno, float raioExterno, float comprimento, float profundidade, GL gl){
+	public Ioio(float raioInterno, float raioExterno, float comprimento, float profundidade, GL gl){
 		this.raioInterno = raioInterno;
 		this.raioExterno = raioExterno;
 		this.comprimento = comprimento;
@@ -31,17 +31,14 @@ public class Esfera extends ObjetoSolido{
 		int i;
 		float r0, r1;
 		float angle, da;
-		int teeth = 20;
-		
-		System.out.println("weeeee");
+		int pontos = 20;
 
 		r0 = raioInterno;
 		r1 = raioExterno - profundidade / 2.0f;
 
+		da = 2.0f * (float) Math.PI / pontos / 4.0f;
 
-		da = 2.0f * (float) Math.PI / teeth / 4.0f;
-
-		gl.glShadeModel(GL.GL_FLAT);
+		//gl.glShadeModel(GL.GL_FLAT);
 
 		gl.glNormal3f(0.0f, 0.0f, 1.0f);
 
@@ -50,12 +47,12 @@ public class Esfera extends ObjetoSolido{
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE, red, 0);
 		
 		gl.glBegin(GL.GL_QUAD_STRIP);
-		for (i = 0; i <= teeth; i++)
+		for (i = 0; i <= pontos; i++)
 		{
-			angle = i * 2.0f * (float) Math.PI / teeth;
+			angle = i * 2.0f * (float) Math.PI / pontos;
 			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), (comprimento + 2) * 0.5f);
 			gl.glVertex3f(r1 * (float)Math.cos(angle), r1 * (float)Math.sin(angle), comprimento * 0.5f);
-			if(i < teeth)
+			if(i < pontos)
 			{
 				gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), (comprimento + 2) * 0.5f);
 				gl.glVertex3f(r1 * (float)Math.cos(angle + 3.0f * da), r1 * (float)Math.sin(angle + 3.0f * da), comprimento * 0.5f);
@@ -65,9 +62,9 @@ public class Esfera extends ObjetoSolido{
 
 		/* tras */
 		gl.glBegin(GL.GL_QUAD_STRIP);
-		for (i = 0; i <= teeth; i++)
+		for (i = 0; i <= pontos; i++)
 		{
-			angle = i * 2.0f * (float) Math.PI / teeth;
+			angle = i * 2.0f * (float) Math.PI / pontos;
 			gl.glVertex3f(r1 * (float)Math.cos(angle), r1 * (float)Math.sin(angle), -comprimento * 0.5f);
 			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), (-comprimento - 2) * 0.5f);
 			gl.glVertex3f(r1 * (float)Math.cos(angle + 3 * da), r1 * (float)Math.sin(angle + 3 * da), -comprimento * 0.5f);
@@ -83,12 +80,12 @@ public class Esfera extends ObjetoSolido{
 		/* cilindro interno*/
 		gl.glColor3f(0.7f, 0.7f, 0.7f);
 		gl.glBegin(GL.GL_QUAD_STRIP);
-		for (i = 0; i <= teeth; i++)
+		for (i = 0; i <= pontos; i++)
 		{
-			angle = i * 2.0f * (float) Math.PI / teeth;
+			angle = i * 2.0f * (float) Math.PI / pontos;
 			gl.glNormal3f(-(float)Math.cos(angle), -(float)Math.sin(angle), 0.0f);
-			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), -comprimento * 0.5f);
-			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), comprimento * 0.5f);
+			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), (-comprimento - 2) * 0.5f);
+			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), (comprimento + 2) * 0.5f);
 		}
 		gl.glEnd();
 	}

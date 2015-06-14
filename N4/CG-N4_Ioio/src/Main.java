@@ -18,11 +18,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private GL gl;
 	private GLU glu;
 	private GLAutoDrawable glDrawable;
-	private GLUT glut;	
-	private ObjetoGrafico objGrafico;
+	private GLUT glut;
 	boolean criandoObjeto;
 	char ultimaTecla;
-	private Esfera ioio;
+	private Ioio ioio;
 	private Cubo cubo;
 	
 	private float view_rotx = 0.0f, view_roty = 0.0f, view_rotz = 0.0f;
@@ -49,7 +48,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	    gl.glEnable(GL.GL_LIGHT0);
 	    gl.glEnable(GL.GL_DEPTH_TEST);
 	    
-		ioio = new Esfera(1f, 4f, 1f, 1f, gl);
+		ioio = new Ioio(1f, 4f, 1f, 1f, gl);
 		gl.glEnable(GL.GL_NORMALIZE);
 		//ioio.atribuirGL(gl);
 		
@@ -241,7 +240,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		}
 
 		glDrawable.display();
-		objGrafico.podeDesenharFilho = false;
 	}
 
 	// metodo definido na interface GLEventListener.
