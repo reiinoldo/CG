@@ -39,6 +39,7 @@ public class Ioio extends ObjetoSolido{
 		da = 2.0f * (float) Math.PI / pontos / 4.0f;
 
 		//gl.glShadeModel(GL.GL_FLAT);
+		//gl.glShadeModel(GL.GL_SMOOTH);
 
 		gl.glNormal3f(0.0f, 0.0f, 1.0f);
 

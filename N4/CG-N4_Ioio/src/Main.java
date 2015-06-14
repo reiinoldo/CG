@@ -8,6 +8,8 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import object.OBJModel;
+
 import com.sun.opengl.util.GLUT;
 
 import java.awt.event.MouseEvent;
@@ -23,6 +25,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	char ultimaTecla;
 	private Ioio ioio;
 	private Cubo cubo;
+	private OBJModel mao;
 	
 	private float view_rotx = 0.0f, view_roty = 0.0f, view_rotz = 0.0f;
 	private int prevMouseX, prevMouseY;
@@ -34,13 +37,10 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glu = new GLU();
 		glut = new GLUT();
 		glDrawable.setGL(new DebugGL(gl));
-		//gl.glEnable(GL.GL_DEPTH_TEST);
-		//gl.glEnable(GL.GL_CULL_FACE);
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		//gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		
-		float pos[] = { 5.0f, 5.0f, 10.0f, 0.0f };
+		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		float pos[] = {5.0f, 5.0f, 10.0f, 0.0f };
 		
 	    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
 	    //gl.glEnable(GL.GL_CULL_FACE);
@@ -48,16 +48,11 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	    gl.glEnable(GL.GL_LIGHT0);
 	    gl.glEnable(GL.GL_DEPTH_TEST);
 	    
-		ioio = new Ioio(1f, 4f, 1f, 1f, gl);
+		ioio = new Ioio(0.5f, 2f, 1f, 1f, gl);
 		gl.glEnable(GL.GL_NORMALIZE);
-		//ioio.atribuirGL(gl);
+		//ioio.atribuirGL(gl);		
 		
-		cubo = new Cubo(100);
-		cubo.atribuirGL(gl);
-		cubo.translacaoXYZ(0, 180, 0);
-		cubo.setR(0);
-		cubo.setG(0);
-		cubo.setB(0);
+		mao = new OBJModel("data/hand", 10f, gl, true);
 //		objeto.atribuirGL(gl);
 	}
 
@@ -75,13 +70,20 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glu.gluLookAt(0, 0, -50, 0, 0, 0, 0, 1, 0);
 
 		//desenhaSRU();
+		
+		
 		//rotacionando os objetos da cena
 	    gl.glPushMatrix();
 	    gl.glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
 	    gl.glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
 	    gl.glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
 	    
-		desenhaIoio();	
+	    gl.glPushMatrix();
+	    gl.glTranslatef(0f, 15f, 0f);
+	    mao.draw(gl);
+	    gl.glPopMatrix();
+	    
+		desenhaIoio();		
 		
 		gl.glPopMatrix();
 		gl.glFlush();
