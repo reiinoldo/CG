@@ -58,7 +58,7 @@ public class OBJModel {
 
         faces = new Faces(verts, normals, texCoords);
         faceMats = new FaceMaterials();
-        modelDims = new ModelDimensions();
+        modelDims = new ModelDimensions();        
     } // end of initModelData()
 
     private void loadModel(String modelNm) {

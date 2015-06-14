@@ -24,7 +24,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	boolean criandoObjeto;
 	char ultimaTecla;
 	private Ioio ioio;
-	private Cubo cubo;
+	private Linha linha;
 	private OBJModel mao;
 	
 	private float view_rotx = 0.0f, view_roty = 0.0f, view_rotz = 0.0f;
@@ -41,28 +41,35 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		float pos[] = {5.0f, 5.0f, 10.0f, 0.0f };
+		float[] lightColorAmbient = {0.7f, 0.7f, 0.7f, 1f};
 		
 	    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
+	    gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColorAmbient, 0);
 	    //gl.glEnable(GL.GL_CULL_FACE);
 	    gl.glEnable(GL.GL_LIGHTING);
-	    gl.glEnable(GL.GL_LIGHT0);
-	    gl.glEnable(GL.GL_DEPTH_TEST);
-	    
-		ioio = new Ioio(0.5f, 2f, 1f, 1f, gl);
-		gl.glEnable(GL.GL_NORMALIZE);
-		//ioio.atribuirGL(gl);		
+	    gl.glEnable(GL.GL_LIGHT1);
+	    gl.glEnable(GL.GL_DEPTH_TEST);	    
 		
+		gl.glEnable(GL.GL_NORMALIZE);
+		
+		//Criando Ioio
+		ioio = new Ioio(0.5f, 2f, 1f, 1f, gl);
+		
+		//Criando mao
 		mao = new OBJModel("data/hand", 10f, gl, true);
-//		objeto.atribuirGL(gl);
+		
+		//Criando linha
+		linha = new Linha(-1.5f, 14f, 0f, 0f, 0.5f, 0f, gl);
+
 	}
 
 	/**  metodo definido na interface GLEventListener.
 	     "render" feito pelo cliente OpenGL. **/	     
 	public void display(GLAutoDrawable arg0) {
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
+		gl.glShadeModel( GL.GL_SMOOTH );
 
 		// configurar window
 		//glu.gluOrtho2D(-240.0f, 240.0f, -230.0f, 230.0f);
@@ -70,7 +77,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		glu.gluLookAt(0, 0, -50, 0, 0, 0, 0, 1, 0);
 
 		//desenhaSRU();
-		
 		
 		//rotacionando os objetos da cena
 	    gl.glPushMatrix();
@@ -83,7 +89,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	    mao.draw(gl);
 	    gl.glPopMatrix();
 	    
-		desenhaIoio();		
+		ioio.desenha();
+		
+		linha.desenha();
 		
 		gl.glPopMatrix();
 		gl.glFlush();
@@ -104,10 +112,6 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 			gl.glVertex2f(  0.0f, -115.0f);
 			gl.glVertex2f(  0.0f, 115.0f );
 		gl.glEnd();
-	}
-	
-	public void desenhaIoio(){		
-		ioio.desenha();
 	}
 	
 	/** Dependendo da tecla pressionada fará as alterações nos objetos desenhados **/
