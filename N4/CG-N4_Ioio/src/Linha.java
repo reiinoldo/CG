@@ -33,4 +33,52 @@ public class Linha extends ObjetoSolido{
 		gl.glEnd();
 		gl.glPopMatrix();
 	}
+	
+	public float getxIni() {
+		return xIni;
+	}
+
+	public void setxIni(float xIni) {
+		this.xIni = xIni;
+	}
+
+	public float getyIni() {
+		return yIni;
+	}
+
+	public void setyIni(float yIni) {
+		this.yIni = yIni;
+	}
+
+	public float getzIni() {
+		return zIni;
+	}
+
+	public void setzIni(float zIni) {
+		this.zIni = zIni;
+	}
+
+	public float getxFim() {
+		return xFim;
+	}
+
+	public void setxFim(float xFim) {
+		this.xFim = xFim;
+	}
+
+	public float getYfim() {
+		return yfim;
+	}
+
+	public void setYfim(float yfim) {
+		this.yfim = yfim;
+	}
+
+	public float getzFim() {
+		return zFim;
+	}
+
+	public void setzFim(float zFim) {
+		this.zFim = zFim;
+	}
 }

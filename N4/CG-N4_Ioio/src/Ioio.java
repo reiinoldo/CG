@@ -7,23 +7,100 @@ public class Ioio extends ObjetoSolido{
 	private float raioExterno;
 	private float comprimento;
 	private float profundidade; 
+	private int qtdDes;
+	private boolean descer;	
+	private int qtdFrente;
+	private Linha linha;
 	
-	public Ioio(float raioInterno, float raioExterno, float comprimento, float profundidade, GL gl){
+	
+	public Ioio(float raioInterno, float raioExterno, float comprimento, float profundidade, GL gl, Linha linha){
 		this.raioInterno = raioInterno;
 		this.raioExterno = raioExterno;
 		this.comprimento = comprimento;
 		this.profundidade = profundidade;
-		this.gl = gl;		
+		this.gl = gl;
+		this.qtdDes = 0;
+		this.linha = linha;
+		this.translacaoXYZ(0f, 10f, 0f);		
 	}
 	
 	@Override
 	public void desenha(){
 		gl.glPushMatrix();
+		movGiro();
+		movFrente();
 		gl.glMultMatrixd(matrizObjeto.GetDate(), 0);
 		gl.glColor3f(this.R, this.G, this.B);
-		//glut.glutSolidSphere(raio, comprimento, profundidade);
 		this.montaPartes();
 		gl.glPopMatrix();
+	}
+	
+	public void girar(){
+		this.descer = true;
+		this.qtdDes = 1;
+		System.out.println("Girou");
+	}
+	
+	private void movGiro(){
+		if(qtdDes > 0){
+			if(descer == true){
+				qtdDes++;
+				this.translacaoXYZ(0, -1, 0);
+				//this.yfim = this.yfim - 1;
+				linha.setYfim(linha.getYfim() - 1);
+			}
+			else{
+				qtdDes--;
+				if(qtdDes > 0){
+				  this.translacaoXYZ(0, 1, 0);
+				  linha.setYfim(linha.getYfim() + 1);
+				}
+				
+			}
+			
+			if(qtdDes == 15){
+				descer = false;
+			}
+		}		
+	}
+	
+	public void frente(){
+		this.descer = true;
+		this.qtdFrente = 1;
+		System.out.println("frente");
+	}
+	
+	private void movFrente(){
+		if(qtdFrente > 0){
+			if(descer == true){
+				qtdFrente++;
+				if(qtdFrente <= 10){
+				  this.translacaoXYZ(-0.5, -1, 0);
+				  linha.setxFim(linha.getxFim() - 0.5f);
+				  linha.setYfim(linha.getYfim() - 1.0f);
+				}
+				else{
+					this.translacaoXYZ(0.5, -1, 0);
+					linha.setxFim(linha.getxFim() + 0.5f);
+					linha.setYfim(linha.getYfim() - 1.0f);
+				}
+				if(qtdFrente == 20)
+					descer = false;
+			} else{
+				qtdFrente--;
+				if(qtdFrente <= 10){
+					if(qtdFrente > 0){
+						this.translacaoXYZ(-0.5, 1, 0);
+						linha.setxFim(linha.getxFim() - 0.5f);
+					    linha.setYfim(linha.getYfim() + 1.0f);
+					}
+				} else{
+					this.translacaoXYZ(0.5, 1, 0);
+					linha.setxFim(linha.getxFim() + 0.5f);
+					linha.setYfim(linha.getYfim() + 1.0f);
+				}
+			}
+		}
 	}
 	
 	//public void gear(GL gl,float inner_radius,float outer_radius,float width,int teeth,float tooth_depth){
@@ -89,5 +166,13 @@ public class Ioio extends ObjetoSolido{
 			gl.glVertex3f(r0 * (float)Math.cos(angle), r0 * (float)Math.sin(angle), (comprimento + 2) * 0.5f);
 		}
 		gl.glEnd();
+	}
+
+	public int getQtdDes() {
+		return qtdDes;
+	}
+	
+	public int getQtdFrente() {
+		return qtdFrente;
 	}
 }

@@ -52,14 +52,14 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 		gl.glEnable(GL.GL_NORMALIZE);
 		
+		//Criando linha
+		linha = new Linha(-1.5f, 14f, 0f, 0f, 10.5f, 0f, gl);
+		
 		//Criando Ioio
-		ioio = new Ioio(0.5f, 2f, 1f, 1f, gl);
+		ioio = new Ioio(0.5f, 2f, 1f, 1f, gl, linha);
 		
 		//Criando mao
-		mao = new OBJModel("data/hand", 10f, gl, true);
-		
-		//Criando linha
-		linha = new Linha(-1.5f, 14f, 0f, 0f, 0.5f, 0f, gl);
+		mao = new OBJModel("data/hand", 10f, gl, true);		
 
 	}
 
@@ -118,131 +118,33 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	public void keyPressed(KeyEvent e) {
 
 		switch (e.getKeyCode()) {
-		/*case KeyEvent.VK_P:
-			objetos[0].exibeVertices();
-			break;
-		case KeyEvent.VK_M:
-			objetos[0].exibeMatriz();
-			break;
-
 		case KeyEvent.VK_R:
-			objetos[0].atribuirIdentidade();
-			break;*/
-		
-		case KeyEvent.VK_SPACE:
-			break;
-
-		/*case KeyEvent.VK_RIGHT:
-			if(objGrafico != null){
-				objGrafico.translacaoXYZ(2.0,0.0,0.0);
-				objGrafico.podeDesenharFilho = true;
-			}
-			break;
-		case KeyEvent.VK_LEFT:
-			if(objGrafico != null){
-				objGrafico.translacaoXYZ(-2.0,0.0,0.0);
-				objGrafico.podeDesenharFilho = true;
-			}
-			break;
-		case KeyEvent.VK_UP:
-			if(objGrafico != null){
-				objGrafico.translacaoXYZ(0.0,2.0,0.0);
-				objGrafico.podeDesenharFilho = true;
-			}
-			break;
-		case KeyEvent.VK_DOWN:
-			if(objGrafico != null){
-				objGrafico.translacaoXYZ(0.0,-2.0,0.0);
-				objGrafico.podeDesenharFilho = true;
-			}
-			break;
-
-		case KeyEvent.VK_PAGE_UP:
-			if(objGrafico != null){
-				Ponto4D centroBBox = new Ponto4D();
-				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
-				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
-				objGrafico.escalaXYZPtoFixo(2.0,centroBBox);
-				objGrafico.podeDesenharFilho = true;
-			}
-			break;
-		case KeyEvent.VK_PAGE_DOWN:
-			if(objGrafico != null){
-				Ponto4D centroBBox = new Ponto4D();
-				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
-				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
-				objGrafico.escalaXYZPtoFixo(0.5, centroBBox);
-				objGrafico.podeDesenharFilho = true;
-			}
-			break;
-
-		case KeyEvent.VK_HOME:
-			if(objGrafico != null){
-				Ponto4D centroBBox = new Ponto4D();
-				centroBBox.atribuirX((objGrafico.obterBBox().obterXmax() + objGrafico.obterBBox().obterXmin()) / 2);
-				centroBBox.atribuirY((objGrafico.obterBBox().obterYmax() + objGrafico.obterBBox().obterYmin()) / 2);
-				objGrafico.rotacaoZPtoFixo(10f,centroBBox);
-			}
-			break;*/
-
-		/*case KeyEvent.VK_1:
-			objetos[0].escalaXYZPtoFixo(0.5, new Ponto4D(-15.0,-15.0,0.0,0.0));
+			glDrawable.display();
 			break;
 			
-		case KeyEvent.VK_2:
-			objetos[0].escalaXYZPtoFixo(2.0, new Ponto4D(-15.0,-15.0,0.0,0.0));
-			break;
-			
-		case KeyEvent.VK_3:
-			objetos[0].rotacaoZPtoFixo(10.0, new Ponto4D(-15.0,-15.0,0.0,0.0));
-			break;*/
-			//Desenhar poligno aberto
-		/*case KeyEvent.VK_A:
-			desenharPoligono(GL.GL_LINE_STRIP,'a');
-			break;
-			//Desenhar poligono fechado
-		case KeyEvent.VK_F:
-			desenharPoligono(GL.GL_LINE_LOOP,'f');
-			break;
-			//Desenhar os poligonos em vermelho
-		case KeyEvent.VK_R:
-			if(objGrafico != null){
-				objGrafico.atribuirCor(1.0f, 0.0f, 0.0f);
-			}
-			break;
-			//Desenhar os poligonos em verde
-		case KeyEvent.VK_G:
-			if(objGrafico != null){
-				objGrafico.atribuirCor(0.0f, 1.0f, 0.0f);
-			}
-			break;
-			//Desenhar os poligonos em azul
 		case KeyEvent.VK_B:
-			if(objGrafico != null){
-				objGrafico.atribuirCor(0.0f, 0.0f, 1.0f);
+			ioio.frente();
+			while(ioio.getQtdFrente() > 0){
+				glDrawable.display();
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 			break;
-			//Desenhar os poligonos em preto
-		case KeyEvent.VK_P:
-			if(objGrafico != null){
-				objGrafico.atribuirCor(0.0f, 0.0f, 0.0f);
+		
+		case KeyEvent.VK_G:
+			ioio.girar();
+			while(ioio.getQtdDes() > 0){
+				glDrawable.display();
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 			break;
-			//Deletara ponto selecionado
-		case KeyEvent.VK_D:
-			for (ObjetoGrafico objetoGrafico : objetos) {
-				objetoGrafico.deletarSelecionado();
-			}
-			verticeSelecionado = null;
-			break;
-			//Ao apertar insert adicionará filhos ao polígono, e ao apertar novamente não fará relação ao poligono selecionado
-		case KeyEvent.VK_INSERT:
-			inserirFilhos = !inserirFilhos;			
-			break;	
-		case KeyEvent.VK_DELETE:
-			if (objGrafico != null) // ta meio fail
-				objGrafico.deletarObjeto();			
-			break;*/			
 		}
 
 		glDrawable.display();
@@ -287,7 +189,8 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	    glDrawable.display();
 	}
 
-	public void mouseMoved(MouseEvent arg0) {		
+	public void mouseMoved(MouseEvent arg0) {
+		//glDrawable.display();
 	}
 
 	public void mouseClicked(MouseEvent arg0) {		
