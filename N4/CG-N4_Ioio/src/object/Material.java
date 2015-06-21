@@ -142,6 +142,7 @@ public class Material {
             texture.setTexParameteri(GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
             texture.setTexParameteri(GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
         } catch (Exception e) {
+        	System.out.println(e.getStackTrace());
             System.out.println("Error loading texture " + texFnm);
         }
     } // end of loadTexture()

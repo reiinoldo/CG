@@ -26,6 +26,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private Ioio ioio;
 	private Linha linha;
 	private OBJModel mao;
+	int framebufferID;
 	
 	private float view_rotx = 0.0f, view_roty = 0.0f, view_rotz = 0.0f;
 	private int prevMouseX, prevMouseY;
@@ -40,14 +41,15 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
-		float pos[] = {5.0f, 5.0f, 10.0f, 0.0f };
-		float[] lightColorAmbient = {0.7f, 0.7f, 0.7f, 1f};
+		float pos[] = {0.0f, 20.0f, 20.0f, 0.5f };
+		float[] lightColorAmbient = {0.2f, 0.2f, 0.2f, 1f};
 		
 	    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
 	    gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColorAmbient, 0);
 	    //gl.glEnable(GL.GL_CULL_FACE);
 	    gl.glEnable(GL.GL_LIGHTING);
 	    gl.glEnable(GL.GL_LIGHT1);
+	    gl.glEnable(GL.GL_LIGHT0);
 	    gl.glEnable(GL.GL_DEPTH_TEST);	    
 		
 		gl.glEnable(GL.GL_NORMALIZE);
