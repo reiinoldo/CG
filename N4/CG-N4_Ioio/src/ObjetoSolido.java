@@ -1,6 +1,14 @@
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
+import javax.swing.JOptionPane;
 
 import com.sun.opengl.util.GLUT;
+import com.sun.opengl.util.texture.TextureData;
 
 
 public abstract class ObjetoSolido {
@@ -14,6 +22,12 @@ public abstract class ObjetoSolido {
 	protected float R;
 	protected float G;
 	protected float B;
+	protected BufferedImage image;
+	protected TextureData td;
+	protected ByteBuffer buffer;
+	protected int alturaImagem;
+	protected int larguraImagem;
+	protected int idTexture[];
 	
 	public ObjetoSolido(){
 		glut = new GLUT();
@@ -109,4 +123,25 @@ public abstract class ObjetoSolido {
 	public void setB(float b) {
 		B = b;
 	}
+	
+	public void loadImage(String fileName)
+	{
+		// Tenta carregar o arquivo		
+		image = null;
+		try {
+			image = ImageIO.read(new File(fileName));
+		}
+		catch (IOException e) {
+			JOptionPane.showMessageDialog(null,"Erro na leitura do arquivo "+fileName);
+		}
+
+		// Obtém largura e altura
+		larguraImagem  = image.getWidth();
+		alturaImagem = image.getHeight();
+		// Gera uma nova TextureData...
+		td = new TextureData(0,0,false,image);
+		// ...e obtém um ByteBuffer a partir dela
+		buffer = (ByteBuffer) td.getBuffer();
+	}
+
 }

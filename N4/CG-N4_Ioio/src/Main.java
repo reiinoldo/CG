@@ -26,6 +26,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	private Ioio ioio;
 	private Linha linha;
 	private OBJModel mao;
+	private Fundo fundo;
 	int framebufferID;
 	
 	private float view_rotx = 0.0f, view_roty = 0.0f, view_rotz = 0.0f;
@@ -41,18 +42,26 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
-		float pos[] = {0.0f, 20.0f, 20.0f, 0.5f };
+		gl.glShadeModel( GL.GL_SMOOTH );
+		
+		float pos[] = {0.0f, 0.0f, -10.0f, 0.5f };
 		float[] lightColorAmbient = {0.2f, 0.2f, 0.2f, 1f};
+		float pos2[] = {0.0f, 20.0f, -20.0f, 0.5f };
 		
 	    gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, pos, 0);
+	    //gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, pos2, 0);
 	    gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColorAmbient, 0);
 	    //gl.glEnable(GL.GL_CULL_FACE);
 	    gl.glEnable(GL.GL_LIGHTING);
+	    //gl.glEnable(GL.GL_LIGHT2);
 	    gl.glEnable(GL.GL_LIGHT1);
 	    gl.glEnable(GL.GL_LIGHT0);
 	    gl.glEnable(GL.GL_DEPTH_TEST);	    
 		
 		gl.glEnable(GL.GL_NORMALIZE);
+		
+		//gl.glEnable(GL.GL_COLOR_MATERIAL);
+		gl.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE);	
 		
 		//Criando linha
 		linha = new Linha(-1.5f, 14f, 0f, 0f, 10.5f, 0f, gl);
@@ -61,7 +70,9 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 		ioio = new Ioio(0.5f, 2f, 1f, 1f, gl, linha);
 		
 		//Criando mao
-		mao = new OBJModel("data/hand", 10f, gl, true);		
+		mao = new OBJModel("data/hand", 10f, gl, true);
+		
+		fundo = new Fundo(gl);
 
 	}
 
@@ -70,15 +81,18 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	public void display(GLAutoDrawable arg0) {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glShadeModel( GL.GL_SMOOTH );
+		gl.glLoadIdentity();		
 
 		// configurar window
 		//glu.gluOrtho2D(-240.0f, 240.0f, -230.0f, 230.0f);
 		glu.gluPerspective(45, 1, 1, 1000);
-		glu.gluLookAt(0, 0, -50, 0, 0, 0, 0, 1, 0);
+		glu.gluLookAt(0, 0, 50, 0, 0, 0, 0, 1, 0);
 
 		//desenhaSRU();
+		gl.glPushMatrix();
+		gl.glTranslatef(0f, 0f, -30f);
+		fundo.desenha();
+		gl.glPopMatrix();
 		
 		//rotacionando os objetos da cena
 	    gl.glPushMatrix();
@@ -93,7 +107,7 @@ public class Main implements GLEventListener, KeyListener, MouseListener, MouseM
 	    
 		ioio.desenha();
 		
-		linha.desenha();
+		linha.desenha();			
 		
 		gl.glPopMatrix();
 		gl.glFlush();
